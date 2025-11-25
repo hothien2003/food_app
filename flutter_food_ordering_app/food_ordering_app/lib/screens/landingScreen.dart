@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_clip_shadow/flutter_clip_shadow.dart';
-import 'package:food_ordering_app/screens/loginScreen.dart';
+import 'package:food_ordering_app/pages/Login_Signup/login.dart';
+import 'package:food_ordering_app/pages/Login_Signup/signup_page.dart';
 
 import '../const/colors.dart';
 import '../utils/helper.dart';
@@ -67,9 +68,9 @@ class LandingScreen extends StatelessWidget {
                         onPressed: () {
                           Navigator.of(
                             context,
-                          ).pushReplacementNamed(LoginScreen.routeName);
+                          ).pushReplacementNamed(Login.routeName);
                         },
-                        child: Text("Login"),
+                        child: Text("Đăng nhập"),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -93,8 +94,12 @@ class LandingScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        onPressed: () {},
-                        child: Text("Create an Account"),
+                        onPressed: () {
+                          Navigator.of(
+                            context,
+                          ).pushReplacementNamed(SignUpPage.routeName);
+                        },
+                        child: Text("Tạo tài khoản"),
                       ),
                     ),
                     Spacer(),

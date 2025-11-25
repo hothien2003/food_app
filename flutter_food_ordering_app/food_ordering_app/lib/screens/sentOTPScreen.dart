@@ -18,13 +18,13 @@ class SendOTPScreen extends StatelessWidget {
             children: [
               SizedBox(height: 20),
               Text(
-                'We have sent you an OTP to your Mobile',
+                'Chúng tôi đã gửi mã OTP đến điện thoại của bạn',
                 style: Helper.getTheme(context).headlineSmall,
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 20),
               Text(
-                "Please check your mobile number 071*****12 continue to reset your password",
+                "Vui lòng kiểm tra số điện thoại 071*****12 để tiếp tục đặt lại mật khẩu.",
                 textAlign: TextAlign.center,
               ),
               SizedBox(height: 50),
@@ -42,16 +42,16 @@ class SendOTPScreen extends StatelessWidget {
                       context,
                     ).pushReplacementNamed(NewPwScreen.routeName);
                   },
-                  child: Text("Next"),
+                  child: Text("Tiếp tục"),
                 ),
               ),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text("Didn't Recieve? "),
+                  Text("Không nhận được? "),
                   Text(
-                    "Click Here",
+                    "Nhấn vào đây",
                     style: TextStyle(
                       color: AppColor.orange,
                       fontWeight: FontWeight.bold,

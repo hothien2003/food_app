@@ -27,10 +27,9 @@ class AboutScreen extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          "About Us",
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                          "Về chúng tôi",
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                       ),
                       Image.asset(
@@ -77,18 +76,15 @@ class AboutCard extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const CircleAvatar(
-          radius: 5,
-          backgroundColor: AppColor.orange,
-        ),
+        const CircleAvatar(radius: 5, backgroundColor: AppColor.orange),
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColor.primary,
-                ),
+            "Thienmeal kết nối người dùng với hàng nghìn nhà hàng chất lượng, đảm bảo giao hàng nhanh chóng và minh bạch chi phí. "
+            "Chúng tôi liên tục mở rộng mạng lưới đối tác, tối ưu trải nghiệm đặt món và chăm sóc khách hàng 24/7.",
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: AppColor.primary),
           ),
         ),
       ],

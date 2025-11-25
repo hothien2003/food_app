@@ -14,235 +14,248 @@ class MyOrderScreen extends StatelessWidget {
       body: Stack(
         children: [
           SafeArea(
-            child: Column(
-              children: [
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: Icon(Icons.arrow_back_ios_rounded),
-                    ),
-                    Expanded(
-                      child: Text(
-                        "My Order",
-                        style: Helper.getTheme(context).headlineMedium,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: SizedBox(
-                    height: 80,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: SizedBox(
-                            height: 80,
-                            width: 80,
-                            child: Image.asset(
-                              Helper.getAssetName("hamburger.jpg", "real"),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Text(
-                              "King Burgers",
-                              style: Helper.getTheme(context).displaySmall,
-                            ),
-                            Row(
-                              children: [
-                                Image.asset(
-                                  Helper.getAssetName(
-                                    "star_filled.png",
-                                    "virtual",
-                                  ),
-                                ),
-                                SizedBox(width: 5),
-                                Text(
-                                  "4.9",
-                                  style: TextStyle(color: AppColor.orange),
-                                ),
-                                Text(" (124 ratings)"),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Text("Burger"),
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 5),
-                                  child: Text(
-                                    ".",
-                                    style: TextStyle(
-                                      color: AppColor.orange,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Text("Western Food"),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                SizedBox(
-                                  height: 15,
-                                  child: Image.asset(
-                                    Helper.getAssetName("loc.png", "virtual"),
-                                  ),
-                                ),
-                                SizedBox(width: 5),
-                                Text("No 03, 4th Lane, Newyork"),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: 30),
-                Container(
-                  width: double.infinity,
-                  color: AppColor.placeholderBg,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      children: [
-                        BurgerCard(price: "16", name: "Beef Burger"),
-                        BurgerCard(price: "14", name: "Classic Burger"),
-                        BurgerCard(price: "17", name: "Cheese Chicken Burger"),
-                        BurgerCard(price: "15", name: "Chicken Legs Basket"),
-                        BurgerCard(
-                          price: "6",
-                          name: "French Fries Large",
-                          isLast: true,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 100),
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: AppColor.placeholder.withOpacity(0.25),
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "Delivery Instruction",
-                                style: Helper.getTheme(context).displaySmall,
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: Row(
-                                children: [
-                                  Icon(Icons.add, color: AppColor.orange),
-                                  Text(
-                                    "Add Notes",
-                                    style: TextStyle(color: AppColor.orange),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        icon: Icon(Icons.arrow_back_ios_rounded),
                       ),
-                      SizedBox(height: 15),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Sub Total",
-                              style: Helper.getTheme(context).displaySmall,
-                            ),
-                          ),
-                          Text(
-                            "\$68",
-                            style: Helper.getTheme(
-                              context,
-                            ).displaySmall!.copyWith(color: AppColor.orange),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Delivery Cost",
-                              style: Helper.getTheme(context).displaySmall,
-                            ),
-                          ),
-                          Text(
-                            "\$2",
-                            style: Helper.getTheme(
-                              context,
-                            ).displaySmall!.copyWith(color: AppColor.orange),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 10),
-                      Divider(
-                        color: AppColor.placeholder.withOpacity(0.25),
-                        thickness: 1.5,
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "Total",
-                              style: Helper.getTheme(context).displaySmall,
-                            ),
-                          ),
-                          Text(
-                            "\$70",
-                            style: Helper.getTheme(context).displaySmall!
-                                .copyWith(color: AppColor.orange, fontSize: 22),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      SizedBox(
-                        height: 50,
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(
-                              context,
-                            ).pushNamed(CheckoutScreen.routeName);
-                          },
-                          child: Text("Checkout"),
+                      Expanded(
+                        child: Text(
+                          "Đơn hàng của tôi",
+                          style: Helper.getTheme(context).headlineMedium,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ],
+                  SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: SizedBox(
+                      height: 80,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: SizedBox(
+                              height: 80,
+                              width: 80,
+                              child: Image.asset(
+                                Helper.getAssetName("hamburger.jpg", "real"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisSize: MainAxisSize.max,
+                            children: [
+                              Text(
+                                "King Burgers",
+                                style: Helper.getTheme(context).displaySmall,
+                              ),
+                              Row(
+                                children: [
+                                  Image.asset(
+                                    Helper.getAssetName(
+                                      "star_filled.png",
+                                      "virtual",
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text(
+                                    "4.9",
+                                    style: TextStyle(color: AppColor.orange),
+                                  ),
+                                  Text(" (124 đánh giá)"),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text("Burger"),
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 5),
+                                    child: Text(
+                                      ".",
+                                      style: TextStyle(
+                                        color: AppColor.orange,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  Text("Ẩm thực Âu"),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  SizedBox(
+                                    height: 15,
+                                    child: Image.asset(
+                                      Helper.getAssetName("loc.png", "virtual"),
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Text("Số 03, đường 4, New York"),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 30),
+                  Container(
+                    width: double.infinity,
+                    color: AppColor.placeholderBg,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Column(
+                        children: [
+                          BurgerCard(price: "160.000 đ", name: "Burger bò"),
+                          BurgerCard(
+                            price: "140.000 đ",
+                            name: "Burger cổ điển",
+                          ),
+                          BurgerCard(
+                            price: "170.000 đ",
+                            name: "Burger gà phô mai",
+                          ),
+                          BurgerCard(price: "150.000 đ", name: "Gà giòn sốt"),
+                          BurgerCard(
+                            price: "60.000 đ",
+                            name: "Khoai tây chiên lớn",
+                            isLast: true,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            border: Border(
+                              bottom: BorderSide(
+                                color: AppColor.placeholder.withOpacity(0.25),
+                              ),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "Hướng dẫn giao hàng",
+                                  style: Helper.getTheme(context).displaySmall,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {},
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.add, color: AppColor.orange),
+                                    Text(
+                                      "Thêm ghi chú",
+                                      style: TextStyle(color: AppColor.orange),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: 15),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Tạm tính",
+                                style: Helper.getTheme(context).displaySmall,
+                              ),
+                            ),
+                            Text(
+                              "680.000 đ",
+                              style: Helper.getTheme(
+                                context,
+                              ).displaySmall!.copyWith(color: AppColor.orange),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Phí giao hàng",
+                                style: Helper.getTheme(context).displaySmall,
+                              ),
+                            ),
+                            Text(
+                              "20.000 đ",
+                              style: Helper.getTheme(
+                                context,
+                              ).displaySmall!.copyWith(color: AppColor.orange),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 10),
+                        Divider(
+                          color: AppColor.placeholder.withOpacity(0.25),
+                          thickness: 1.5,
+                        ),
+                        SizedBox(height: 10),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "Tổng cộng",
+                                style: Helper.getTheme(context).displaySmall,
+                              ),
+                            ),
+                            Text(
+                              "700.000 đ",
+                              style: Helper.getTheme(
+                                context,
+                              ).displaySmall!.copyWith(
+                                color: AppColor.orange,
+                                fontSize: 22,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        SizedBox(
+                          height: 50,
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed(CheckoutScreen.routeName);
+                            },
+                            child: Text("Thanh toán"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          Positioned(bottom: 0, left: 0, child: CustomNavBar()),
+          Positioned(bottom: 0, left: 0, right: 0, child: CustomNavBar()),
         ],
       ),
     );
@@ -283,7 +296,7 @@ class BurgerCard extends StatelessWidget {
             ),
           ),
           Text(
-            "\$$_price",
+            _price,
             style: TextStyle(
               color: AppColor.primary,
               fontSize: 16,

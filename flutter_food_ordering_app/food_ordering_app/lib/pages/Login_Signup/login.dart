@@ -9,6 +9,7 @@ import 'package:food_ordering_app/utils/shared_preferences_helper.dart';
 import 'package:food_ordering_app/widgets/customTextInput.dart';
 import 'package:food_ordering_app/const/colors.dart';
 import 'package:food_ordering_app/screens/homeScreen.dart';
+import 'package:food_ordering_app/pages/Admin/admin_page.dart';
 
 class Login extends StatefulWidget {
   static const routeName = "/login";
@@ -34,43 +35,75 @@ class _LoginState extends State<Login> {
 
       try {
         if (username == "Admin" && password == "123") {
-          Navigator.pushReplacementNamed(context, '/AdminPage');
-          // Hiển thị thông báo đăng nhập thành công
-          return NotificationUtil.showSuccessMessage(
+          // Đăng nhập Admin
+          if (!mounted) return;
+
+          NotificationUtil.showSuccessMessage(context, 'Đăng nhập thành công!');
+
+          // Delay ngắn để thông báo hiển thị
+          await Future.delayed(Duration(milliseconds: 500));
+
+          if (!mounted) return;
+
+          Navigator.of(
             context,
-            'Đăng nhập thành công!',
-          );
+          ).pushNamedAndRemoveUntil(AdminPage.routeName, (route) => false);
+          return;
         }
 
         final List<NguoiDung> users = await _apiNguoiDung.getNguoiDungData();
 
+        // Kiểm tra nếu danh sách người dùng rỗng
+        if (users.isEmpty) {
+          throw Exception(
+            'Không tìm thấy dữ liệu người dùng. Vui lòng kiểm tra kết nối server.',
+          );
+        }
+
+        // Tìm người dùng khớp với tên đăng nhập và mật khẩu
         final NguoiDung matchedUser = users.firstWhere(
-          (user) => user.tenDangNhap == username && user.matKhau == password,
+          (user) =>
+              user.tenDangNhap.trim() == username &&
+              user.matKhau.trim() == password,
           orElse: () => throw Exception("Tài khoản hoặc mật khẩu không đúng"),
         );
+
+        // Kiểm tra nếu mã người dùng không hợp lệ
+        if (matchedUser.maNguoiDung == 0) {
+          throw Exception("Tài khoản hoặc mật khẩu không đúng");
+        }
 
         // Lưu mã người dùng vào SharedPreferences
         await luuNguoiDungDangNhap(matchedUser.maNguoiDung);
 
-        // Hiển thị thông báo đăng nhập thành công
-        NotificationUtil.showSuccessMessage(
+        if (!mounted) return;
+
+        // Hiển thị thông báo thành công
+        NotificationUtil.showSuccessMessage(context, 'Đăng nhập thành công!');
+
+        // Delay ngắn để thông báo hiển thị
+        await Future.delayed(Duration(milliseconds: 500));
+
+        if (!mounted) return;
+
+        // Navigate đến HomeScreen
+        Navigator.of(
           context,
-          'Đăng nhập thành công!',
-          onComplete: () {
-            if (!mounted) return;
-            Navigator.pushReplacementNamed(context, HomeScreen.routeName);
-          },
-        );
+        ).pushNamedAndRemoveUntil(HomeScreen.routeName, (route) => false);
       } catch (e) {
-        NotificationUtil.showErrorMessage(
-          context,
-          'Đăng nhập thất bại! vui lòng kiểm tra lại',
-          onComplete: () {
-            if (context.mounted) {
-              Navigator.pop(context, true);
-            }
-          },
-        );
+        // Hiển thị thông báo lỗi chi tiết hơn
+        String errorMessage = 'Đăng nhập thất bại! vui lòng kiểm tra lại';
+        if (e.toString().contains('Không thể kết nối') ||
+            e.toString().contains('kết nối đến server') ||
+            e.toString().contains('Lỗi kết nối API')) {
+          errorMessage = e.toString().replaceAll('Exception: ', '');
+        } else if (e.toString().contains('Tài khoản hoặc mật khẩu')) {
+          errorMessage = 'Tài khoản hoặc mật khẩu không đúng';
+        }
+
+        print('Lỗi đăng nhập: $e'); // Log để debug
+
+        NotificationUtil.showErrorMessage(context, errorMessage);
       }
     }
   }

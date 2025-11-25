@@ -20,18 +20,18 @@ class NewPwScreen extends StatelessWidget {
               children: [
                 SizedBox(height: 20),
                 Text(
-                  "New Password",
+                  "Mật khẩu mới",
                   style: Helper.getTheme(context).headlineSmall,
                 ),
                 SizedBox(height: 20),
                 Text(
-                  "Please enter your email to recieve a link to create a new password via email",
+                  "Vui lòng nhập email để nhận liên kết đặt lại mật khẩu.",
                   textAlign: TextAlign.center,
                 ),
                 SizedBox(height: 30),
-                CustomTextInput(hintText: "New Password"),
+                CustomTextInput(hintText: "Mật khẩu mới"),
                 SizedBox(height: 20),
-                CustomTextInput(hintText: "Confirm Password"),
+                CustomTextInput(hintText: "Xác nhận mật khẩu"),
                 SizedBox(height: 20),
                 SizedBox(
                   height: 50,
@@ -42,7 +42,7 @@ class NewPwScreen extends StatelessWidget {
                         context,
                       ).pushReplacementNamed(IntroScreen.routeName);
                     },
-                    child: Text("Next"),
+                    child: Text("Tiếp tục"),
                   ),
                 ),
               ],

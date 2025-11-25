@@ -20,12 +20,12 @@ class ForgetPwScreen extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  "Reset Password",
+                  "Đặt lại mật khẩu",
                   style: Helper.getTheme(context).headlineSmall,
                 ),
                 Spacer(),
                 Text(
-                  "Please enter your email to recieve a link to create a new password via email",
+                  "Vui lòng nhập email để nhận liên kết tạo mật khẩu mới.",
                   textAlign: TextAlign.center,
                 ),
                 Spacer(flex: 2),
@@ -40,7 +40,7 @@ class ForgetPwScreen extends StatelessWidget {
                         context,
                       ).pushReplacementNamed(SendOTPScreen.routeName);
                     },
-                    child: Text("Send"),
+                    child: Text("Gửi"),
                   ),
                 ),
               ],

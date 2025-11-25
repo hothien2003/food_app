@@ -13,285 +13,348 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Good morning Akila!",
-                          style: Helper.getTheme(context).headlineMedium,
-                        ),
-                        Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(
-                                  context,
-                                ).pushNamed(ChatbotAIPage.routeName);
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: AppColor.orange,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(
-                                      Icons.chat,
-                                      color: Colors.white,
-                                      size: 20,
-                                    ),
-                                    SizedBox(width: 4),
-                                    Text(
-                                      "AI Trợ lý",
-                                      style: TextStyle(
+    try {
+      return Scaffold(
+        body: Stack(
+          children: [
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(bottom: 120),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Flexible(
+                            child: Text(
+                              "Xin chào !!!",
+                              style: Helper.getTheme(context).headlineMedium,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.of(
+                                    context,
+                                  ).pushNamed(ChatbotAIPage.routeName);
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.orange,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        Icons.chat,
                                         color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 12,
+                                        size: 18,
                                       ),
-                                    ),
-                                  ],
+                                      SizedBox(width: 4),
+                                      Flexible(
+                                        child: Text(
+                                          "AI Trợ lý",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                          ),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 10),
+                              SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: Image.asset(
+                                  Helper.getAssetName("cart.png", "virtual"),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text("Giao đến"),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: DropdownButtonHideUnderline(
+                        child: SizedBox(
+                          width: 250,
+                          child: DropdownButton(
+                            value: "vi_tri_hien_tai",
+                            items: [
+                              DropdownMenuItem(
+                                value: "vi_tri_hien_tai",
+                                child: Text("Vị trí hiện tại"),
+                              ),
+                            ],
+                            icon: SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: Image.asset(
+                                Helper.getAssetName(
+                                  "dropdown_filled.png",
+                                  "virtual",
                                 ),
                               ),
                             ),
+                            style: Helper.getTheme(context).headlineLarge,
+                            onChanged: (_) {},
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Custom.SearchBar(title: "Tìm món ăn"),
+                    SizedBox(height: 20),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(left: 20),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            CategoryCard(
+                              image: Image.asset(
+                                Helper.getAssetName("hamburger2.jpg", "real"),
+                                fit: BoxFit.cover,
+                              ),
+                              name: "Khuyến mãi",
+                            ),
                             SizedBox(width: 10),
-                            Image.asset(
-                              Helper.getAssetName("cart.png", "virtual"),
+                            CategoryCard(
+                              image: Image.asset(
+                                Helper.getAssetName("rice2.jpg", "real"),
+                                fit: BoxFit.cover,
+                              ),
+                              name: "Món Sri Lanka",
                             ),
+                            SizedBox(width: 10),
+                            CategoryCard(
+                              image: Image.asset(
+                                Helper.getAssetName("fruit.jpg", "real"),
+                                fit: BoxFit.cover,
+                              ),
+                              name: "Món Ý",
+                            ),
+                            SizedBox(width: 10),
+                            CategoryCard(
+                              image: Image.asset(
+                                Helper.getAssetName("rice.jpg", "real"),
+                                fit: BoxFit.cover,
+                              ),
+                              name: "Món Ấn Độ",
+                            ),
+                            SizedBox(width: 10),
                           ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text("Deilivering to"),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: DropdownButtonHideUnderline(
-                      child: SizedBox(
-                        width: 250,
-                        child: DropdownButton(
-                          value: "current location",
-                          items: [
-                            DropdownMenuItem(
-                              value: "current location",
-                              child: Text("Current Location"),
-                            ),
-                          ],
-                          icon: Image.asset(
-                            Helper.getAssetName(
-                              "dropdown_filled.png",
-                              "virtual",
-                            ),
-                          ),
-                          style: Helper.getTheme(context).headlineLarge,
-                          onChanged: (_) {},
                         ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Custom.SearchBar(title: "Search Food"),
-                  SizedBox(height: 20),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(left: 20),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
+                    SizedBox(height: 50),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CategoryCard(
-                            image: Image.asset(
-                              Helper.getAssetName("hamburger2.jpg", "real"),
-                              fit: BoxFit.cover,
-                            ),
-                            name: "Offers",
+                          Text(
+                            "Nhà hàng nổi bật",
+                            style: Helper.getTheme(context).headlineMedium,
                           ),
-                          SizedBox(width: 10),
-                          CategoryCard(
-                            image: Image.asset(
-                              Helper.getAssetName("rice2.jpg", "real"),
-                              fit: BoxFit.cover,
-                            ),
-                            name: "Sri Lankan",
-                          ),
-                          SizedBox(width: 10),
-                          CategoryCard(
-                            image: Image.asset(
-                              Helper.getAssetName("fruit.jpg", "real"),
-                              fit: BoxFit.cover,
-                            ),
-                            name: "Italian",
-                          ),
-                          SizedBox(width: 10),
-                          CategoryCard(
-                            image: Image.asset(
-                              Helper.getAssetName("rice.jpg", "real"),
-                              fit: BoxFit.cover,
-                            ),
-                            name: "Indian",
-                          ),
-                          SizedBox(width: 10),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 50),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Popular Restaurants",
-                          style: Helper.getTheme(context).headlineMedium,
-                        ),
-                        TextButton(onPressed: () {}, child: Text("View all")),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  RestaurantCard(
-                    image: Image.asset(
-                      Helper.getAssetName("pizza2.jpg", "real"),
-                      fit: BoxFit.cover,
-                    ),
-                    name: "Minute by tuk tuk",
-                  ),
-                  RestaurantCard(
-                    image: Image.asset(
-                      Helper.getAssetName("breakfast.jpg", "real"),
-                      fit: BoxFit.cover,
-                    ),
-                    name: "Cafe de Noir",
-                  ),
-                  RestaurantCard(
-                    image: Image.asset(
-                      Helper.getAssetName("bakery.jpg", "real"),
-                      fit: BoxFit.cover,
-                    ),
-                    name: "Bakes by Tella",
-                  ),
-                  SizedBox(height: 50),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Most Popular",
-                          style: Helper.getTheme(context).headlineMedium,
-                        ),
-                        TextButton(onPressed: () {}, child: Text("View all")),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    height: 250,
-                    width: double.infinity,
-                    padding: const EdgeInsets.only(left: 20),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          MostPopularCard(
-                            image: Image.asset(
-                              Helper.getAssetName("pizza4.jpg", "real"),
-                              fit: BoxFit.cover,
-                            ),
-                            name: "Cafe De Bambaa",
-                          ),
-                          SizedBox(width: 30),
-                          MostPopularCard(
-                            name: "Burger by Bella",
-                            image: Image.asset(
-                              Helper.getAssetName("dessert3.jpg", "real"),
-                              fit: BoxFit.cover,
-                            ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text("Xem tất cả"),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Recent Items",
-                          style: Helper.getTheme(context).headlineMedium,
-                        ),
-                        TextButton(onPressed: () {}, child: Text("View all")),
-                      ],
+                    SizedBox(height: 20),
+                    RestaurantCard(
+                      image: Image.asset(
+                        Helper.getAssetName("pizza2.jpg", "real"),
+                        fit: BoxFit.cover,
+                      ),
+                      name: "Quán Tuk Tuk",
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.of(
-                              context,
-                            ).pushNamed(IndividualItem.routeName);
-                          },
-                          child: RecentItemCard(
+                    RestaurantCard(
+                      image: Image.asset(
+                        Helper.getAssetName("breakfast.jpg", "real"),
+                        fit: BoxFit.cover,
+                      ),
+                      name: "Cà phê de Noir",
+                    ),
+                    RestaurantCard(
+                      image: Image.asset(
+                        Helper.getAssetName("bakery.jpg", "real"),
+                        fit: BoxFit.cover,
+                      ),
+                      name: "Bánh ngọt Tella",
+                    ),
+                    SizedBox(height: 50),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Phổ biến nhất",
+                            style: Helper.getTheme(context).headlineMedium,
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text("Xem tất cả"),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Container(
+                      height: 270,
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(left: 20),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            MostPopularCard(
+                              image: Image.asset(
+                                Helper.getAssetName("pizza4.jpg", "real"),
+                                fit: BoxFit.cover,
+                              ),
+                              name: "Cafe De Bambaa",
+                            ),
+                            SizedBox(width: 30),
+                            MostPopularCard(
+                              name: "Burger của Bella",
+                              image: Image.asset(
+                                Helper.getAssetName("dessert3.jpg", "real"),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Món vừa xem",
+                            style: Helper.getTheme(context).headlineMedium,
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text("Xem tất cả"),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed(IndividualItem.routeName);
+                            },
+                            child: RecentItemCard(
+                              image: Image.asset(
+                                Helper.getAssetName("pizza3.jpg", "real"),
+                                fit: BoxFit.cover,
+                              ),
+                              name: "Pizza Mulberry của Josh",
+                            ),
+                          ),
+                          RecentItemCard(
                             image: Image.asset(
-                              Helper.getAssetName("pizza3.jpg", "real"),
+                              Helper.getAssetName("coffee.jpg", "real"),
                               fit: BoxFit.cover,
                             ),
-                            name: "Mulberry Pizza by Josh",
+                            name: "Barita",
                           ),
-                        ),
-                        RecentItemCard(
-                          image: Image.asset(
-                            Helper.getAssetName("coffee.jpg", "real"),
-                            fit: BoxFit.cover,
+                          RecentItemCard(
+                            image: Image.asset(
+                              Helper.getAssetName("pizza.jpg", "real"),
+                              fit: BoxFit.cover,
+                            ),
+                            name: "Pizza Rush Hour",
                           ),
-                          name: "Barita",
-                        ),
-                        RecentItemCard(
-                          image: Image.asset(
-                            Helper.getAssetName("pizza.jpg", "real"),
-                            fit: BoxFit.cover,
-                          ),
-                          name: "Pizza Rush Hour",
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: SizedBox(
+                width: double.infinity,
+                child: CustomNavBar(home: true),
+              ),
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColor.orange,
+          child: Icon(Icons.smart_toy, color: Colors.white),
+          onPressed: () {
+            Navigator.of(context).pushNamed(ChatbotAIPage.routeName);
+          },
+        ),
+      );
+    } catch (e) {
+      // Nếu có lỗi khi build, hiển thị màn hình lỗi
+      print('Lỗi khi build HomeScreen: $e');
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, size: 64, color: Colors.red),
+              SizedBox(height: 16),
+              Text(
+                'Có lỗi xảy ra khi tải trang chủ',
+                style: TextStyle(fontSize: 18),
+              ),
+              SizedBox(height: 8),
+              Text(
+                e.toString(),
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
+            ],
           ),
-          Positioned(bottom: 0, left: 0, child: CustomNavBar(home: true)),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColor.orange,
-        child: Icon(Icons.smart_toy, color: Colors.white),
-        onPressed: () {
-          Navigator.of(context).pushNamed(ChatbotAIPage.routeName);
-        },
-      ),
-    );
+        ),
+      );
+    }
   }
 }
 
@@ -327,7 +390,9 @@ class RecentItemCard extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Text("Cafe"),
+                    Flexible(
+                      child: Text("Cà phê", overflow: TextOverflow.ellipsis),
+                    ),
                     SizedBox(width: 5),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5.0),
@@ -340,19 +405,27 @@ class RecentItemCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Text("Western Food"),
-                    SizedBox(width: 20),
+                    Flexible(
+                      child: Text(
+                        "Ẩm thực Âu",
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
                 Row(
                   children: [
-                    Image.asset(
-                      Helper.getAssetName("star_filled.png", "virtual"),
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: Image.asset(
+                        Helper.getAssetName("star_filled.png", "virtual"),
+                      ),
                     ),
                     SizedBox(width: 5),
                     Text("4.9", style: TextStyle(color: AppColor.orange)),
                     SizedBox(width: 10),
-                    Text('(124) Ratings'),
+                    Text('(124) đánh giá'),
                   ],
                 ),
               ],
@@ -374,51 +447,54 @@ class MostPopularCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: SizedBox(
-            width: 300,
-            height: 200,
-            child:
-                _image ?? Image.asset(
-                      Helper.getAssetName("hamburger2.jpg", "real"),
-                      fit: BoxFit.cover,
-                    ),
+    return SizedBox(
+      width: 300,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: SizedBox(width: 300, height: 200, child: _image),
           ),
-        ),
-        SizedBox(height: 10),
-        Text(
-          _name,
-          style: Helper.getTheme(
-            context,
-          ).headlineLarge!.copyWith(color: AppColor.primary),
-        ),
-        Row(
-          children: [
-            Text("Cafe"),
-            SizedBox(width: 5),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 5.0),
-              child: Text(
-                ".",
-                style: TextStyle(
-                  color: AppColor.orange,
-                  fontWeight: FontWeight.w900,
+          SizedBox(height: 10),
+          Text(
+            _name,
+            style: Helper.getTheme(
+              context,
+            ).headlineLarge!.copyWith(color: AppColor.primary),
+          ),
+          Row(
+            children: [
+              Flexible(child: Text("Cà phê", overflow: TextOverflow.ellipsis)),
+              SizedBox(width: 5),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 5.0),
+                child: Text(
+                  ".",
+                  style: TextStyle(
+                    color: AppColor.orange,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(width: 5),
-            Text("Western Food"),
-            SizedBox(width: 20),
-            Image.asset(Helper.getAssetName("star_filled.png", "virtual")),
-            SizedBox(width: 5),
-            Text("4.9", style: TextStyle(color: AppColor.orange)),
-          ],
-        ),
-      ],
+              SizedBox(width: 5),
+              Flexible(
+                child: Text("Ẩm thực Âu", overflow: TextOverflow.ellipsis),
+              ),
+              SizedBox(width: 20),
+              SizedBox(
+                width: 20,
+                height: 20,
+                child: Image.asset(
+                  Helper.getAssetName("star_filled.png", "virtual"),
+                ),
+              ),
+              SizedBox(width: 5),
+              Text("4.9", style: TextStyle(color: AppColor.orange)),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -438,7 +514,9 @@ class RestaurantCard extends StatelessWidget {
       width: double.infinity,
       child: Column(
         children: [
-          SizedBox(height: 200, width: double.infinity, child: _image),
+          ClipRRect(
+            child: SizedBox(height: 200, width: double.infinity, child: _image),
+          ),
           SizedBox(height: 10),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -452,15 +530,26 @@ class RestaurantCard extends StatelessWidget {
                 SizedBox(height: 5),
                 Row(
                   children: [
-                    Image.asset(
-                      Helper.getAssetName("star_filled.png", "virtual"),
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: Image.asset(
+                        Helper.getAssetName("star_filled.png", "virtual"),
+                      ),
                     ),
                     SizedBox(width: 5),
                     Text("4.9", style: TextStyle(color: AppColor.orange)),
                     SizedBox(width: 5),
-                    Text("(124 ratings)"),
+                    Flexible(
+                      child: Text(
+                        "(124 đánh giá)",
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                     SizedBox(width: 5),
-                    Text("Cafe"),
+                    Flexible(
+                      child: Text("Cà phê", overflow: TextOverflow.ellipsis),
+                    ),
                     SizedBox(width: 5),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5.0),
@@ -473,7 +562,12 @@ class RestaurantCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(width: 5),
-                    Text("Western Food"),
+                    Flexible(
+                      child: Text(
+                        "Ẩm thực Âu",
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
                   ],
                 ),
               ],

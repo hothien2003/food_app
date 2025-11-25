@@ -84,8 +84,8 @@ class IndividualItem extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.only(top: 30.0),
                                   child: Container(
-                                    height: 700,
                                     width: double.infinity,
+                                    constraints: BoxConstraints(maxHeight: 700),
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 30,
                                     ),
@@ -98,472 +98,491 @@ class IndividualItem extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
+                                    child: SingleChildScrollView(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                            ),
+                                            child: Text(
+                                              "Pizza gà Tandoori",
+                                              style:
+                                                  Helper.getTheme(
+                                                    context,
+                                                  ).headlineMedium,
+                                            ),
                                           ),
-                                          child: Text(
-                                            "Tandoori Chicken Pizza",
-                                            style:
-                                                Helper.getTheme(
-                                                  context,
-                                                ).headlineMedium,
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                          ),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        Image.asset(
+                                                          Helper.getAssetName(
+                                                            "star_filled.png",
+                                                            "virtual",
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Image.asset(
+                                                          Helper.getAssetName(
+                                                            "star_filled.png",
+                                                            "virtual",
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Image.asset(
+                                                          Helper.getAssetName(
+                                                            "star_filled.png",
+                                                            "virtual",
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Image.asset(
+                                                          Helper.getAssetName(
+                                                            "star_filled.png",
+                                                            "virtual",
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                        Image.asset(
+                                                          Helper.getAssetName(
+                                                            "star.png",
+                                                            "virtual",
+                                                          ),
+                                                        ),
+                                                        SizedBox(width: 8),
+                                                      ],
+                                                    ),
+                                                    SizedBox(height: 5),
+                                                    Text(
+                                                      "4 sao từ khách hàng",
+                                                      style: TextStyle(
+                                                        color: AppColor.orange,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.end,
                                                     children: [
-                                                      Image.asset(
-                                                        Helper.getAssetName(
-                                                          "star_filled.png",
-                                                          "virtual",
+                                                      SizedBox(height: 20),
+                                                      Text(
+                                                        "750.000 đ",
+                                                        style: TextStyle(
+                                                          color:
+                                                              AppColor.primary,
+                                                          fontSize: 30,
+                                                          fontWeight:
+                                                              FontWeight.w700,
                                                         ),
                                                       ),
-                                                      SizedBox(width: 8),
-                                                      Image.asset(
-                                                        Helper.getAssetName(
-                                                          "star_filled.png",
-                                                          "virtual",
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      Image.asset(
-                                                        Helper.getAssetName(
-                                                          "star_filled.png",
-                                                          "virtual",
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      Image.asset(
-                                                        Helper.getAssetName(
-                                                          "star_filled.png",
-                                                          "virtual",
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                      Image.asset(
-                                                        Helper.getAssetName(
-                                                          "star.png",
-                                                          "virtual",
-                                                        ),
-                                                      ),
-                                                      SizedBox(width: 8),
+                                                      Text("/phần"),
                                                     ],
                                                   ),
-                                                  SizedBox(height: 5),
-                                                  Text(
-                                                    "4 Star Ratings",
-                                                    style: TextStyle(
-                                                      color: AppColor.orange,
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                            ),
+                                            child: Text(
+                                              "Mô tả",
+                                              style: Helper.getTheme(context)
+                                                  .headlineLarge!
+                                                  .copyWith(fontSize: 16),
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                            ),
+                                            child: Text(
+                                              "Đế mỏng giòn phủ sốt cà chua, phô mai mozzarella và gà ướp Tandoori cay nhẹ, phù hợp cho mọi bữa ăn nhanh.",
+                                            ),
+                                          ),
+                                          SizedBox(height: 20),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                            ),
+                                            child: Divider(
+                                              color: AppColor.placeholder,
+                                              thickness: 1.5,
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                            ),
+                                            child: Text(
+                                              "Tùy chỉnh đơn hàng",
+                                              style: Helper.getTheme(context)
+                                                  .headlineLarge!
+                                                  .copyWith(fontSize: 16),
+                                            ),
+                                          ),
+                                          SizedBox(height: 10),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                            ),
+                                            child: Container(
+                                              height: 50,
+                                              width: double.infinity,
+                                              padding: const EdgeInsets.only(
+                                                left: 30,
+                                                right: 10,
                                               ),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.end,
-                                                  children: [
-                                                    SizedBox(height: 20),
-                                                    Text(
-                                                      "Rs. 750",
-                                                      style: TextStyle(
-                                                        color: AppColor.primary,
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.w700,
+                                              decoration: ShapeDecoration(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
+                                                ),
+                                                color: AppColor.placeholderBg,
+                                              ),
+                                              child: DropdownButtonHideUnderline(
+                                                child: DropdownButton(
+                                                  hint: Row(
+                                                    children: [
+                                                      Text(
+                                                        "-Chọn kích cỡ phần ăn-",
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  value: "default",
+                                                  onChanged: (_) {},
+                                                  items: [
+                                                    DropdownMenuItem(
+                                                      value: "default",
+                                                      child: Text(
+                                                        "-Chọn kích cỡ phần ăn-",
                                                       ),
                                                     ),
-                                                    Text("/per Portion"),
                                                   ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                          ),
-                                          child: Text(
-                                            "Description",
-                                            style: Helper.getTheme(context)
-                                                .headlineLarge!
-                                                .copyWith(fontSize: 16),
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                          ),
-                                          child: Text(
-                                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare leo non mollis id cursus. Eu euismod faucibus in leo malesuada",
-                                          ),
-                                        ),
-                                        SizedBox(height: 20),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                          ),
-                                          child: Divider(
-                                            color: AppColor.placeholder,
-                                            thickness: 1.5,
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                          ),
-                                          child: Text(
-                                            "Customize your Order",
-                                            style: Helper.getTheme(context)
-                                                .headlineLarge!
-                                                .copyWith(fontSize: 16),
-                                          ),
-                                        ),
-                                        SizedBox(height: 10),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                          ),
-                                          child: Container(
-                                            height: 50,
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.only(
-                                              left: 30,
-                                              right: 10,
-                                            ),
-                                            decoration: ShapeDecoration(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
-                                              ),
-                                              color: AppColor.placeholderBg,
-                                            ),
-                                            child: DropdownButtonHideUnderline(
-                                              child: DropdownButton(
-                                                hint: Row(
-                                                  children: [
-                                                    Text(
-                                                      "-Select the size of portion-",
-                                                    ),
-                                                  ],
-                                                ),
-                                                value: "default",
-                                                onChanged: (_) {},
-                                                items: [
-                                                  DropdownMenuItem(
-                                                    value: "default",
-                                                    child: Text(
-                                                      "-Select the size of portion-",
+                                                  icon: Image.asset(
+                                                    Helper.getAssetName(
+                                                      "dropdown.png",
+                                                      "virtual",
                                                     ),
                                                   ),
-                                                ],
-                                                icon: Image.asset(
-                                                  Helper.getAssetName(
-                                                    "dropdown.png",
-                                                    "virtual",
-                                                  ),
                                                 ),
                                               ),
                                             ),
                                           ),
-                                        ),
-                                        SizedBox(height: 5),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                          ),
-                                          child: Container(
-                                            height: 50,
-                                            width: double.infinity,
-                                            padding: const EdgeInsets.only(
-                                              left: 30,
-                                              right: 10,
+                                          SizedBox(height: 5),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
                                             ),
-                                            decoration: ShapeDecoration(
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(5),
+                                            child: Container(
+                                              height: 50,
+                                              width: double.infinity,
+                                              padding: const EdgeInsets.only(
+                                                left: 30,
+                                                right: 10,
                                               ),
-                                              color: AppColor.placeholderBg,
-                                            ),
-                                            child: DropdownButtonHideUnderline(
-                                              child: DropdownButton(
-                                                hint: Row(
-                                                  children: [
-                                                    Text(
-                                                      "-Select the ingredients-",
-                                                    ),
-                                                  ],
+                                              decoration: ShapeDecoration(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5),
                                                 ),
-                                                value: "default",
-                                                onChanged: (_) {},
-                                                items: [
-                                                  DropdownMenuItem(
-                                                    value: "default",
-                                                    child: Text(
-                                                      "-Select the ingredients-",
-                                                    ),
-                                                  ),
-                                                ],
-                                                icon: Image.asset(
-                                                  Helper.getAssetName(
-                                                    "dropdown.png",
-                                                    "virtual",
-                                                  ),
-                                                ),
+                                                color: AppColor.placeholderBg,
                                               ),
-                                            ),
-                                          ),
-                                        ),
-                                        SizedBox(height: 15),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 20,
-                                          ),
-                                          child: Row(
-                                            children: [
-                                              Text(
-                                                "Number of Portions",
-                                                style: Helper.getTheme(context)
-                                                    .headlineLarge!
-                                                    .copyWith(fontSize: 16),
-                                              ),
-                                              Expanded(
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    ElevatedButton(
-                                                      style: ButtonStyle(
-                                                        elevation:
-                                                            WidgetStateProperty.all(
-                                                              5.0,
-                                                            ),
+                                              child: DropdownButtonHideUnderline(
+                                                child: DropdownButton(
+                                                  hint: Row(
+                                                    children: [
+                                                      Text(
+                                                        "-Chọn thành phần kèm theo-",
                                                       ),
-                                                      onPressed: () {},
-                                                      child: Text("-"),
+                                                    ],
+                                                  ),
+                                                  value: "default",
+                                                  onChanged: (_) {},
+                                                  items: [
+                                                    DropdownMenuItem(
+                                                      value: "default",
+                                                      child: Text(
+                                                        "-Chọn thành phần kèm theo-",
+                                                      ),
                                                     ),
-                                                    SizedBox(width: 5),
-                                                    Container(
-                                                      height: 35,
-                                                      width: 55,
-                                                      decoration:
-                                                          ShapeDecoration(
-                                                            shape: StadiumBorder(
-                                                              side: BorderSide(
-                                                                color:
-                                                                    AppColor
-                                                                        .orange,
+                                                  ],
+                                                  icon: Image.asset(
+                                                    Helper.getAssetName(
+                                                      "dropdown.png",
+                                                      "virtual",
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 15),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "Số phần",
+                                                  style: Helper.getTheme(
+                                                    context,
+                                                  ).headlineLarge!.copyWith(
+                                                    fontSize: 16,
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment.end,
+                                                    children: [
+                                                      ElevatedButton(
+                                                        style: ButtonStyle(
+                                                          elevation:
+                                                              WidgetStateProperty.all(
+                                                                5.0,
                                                               ),
-                                                            ),
-                                                          ),
-                                                      child: Row(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Text(
-                                                            "2",
-                                                            style: TextStyle(
+                                                        ),
+                                                        onPressed: () {},
+                                                        child: Text("-"),
+                                                      ),
+                                                      SizedBox(width: 5),
+                                                      Container(
+                                                        height: 35,
+                                                        width: 55,
+                                                        decoration: ShapeDecoration(
+                                                          shape: StadiumBorder(
+                                                            side: BorderSide(
                                                               color:
                                                                   AppColor
                                                                       .orange,
                                                             ),
                                                           ),
+                                                        ),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              "2",
+                                                              style: TextStyle(
+                                                                color:
+                                                                    AppColor
+                                                                        .orange,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      SizedBox(width: 5),
+                                                      ElevatedButton(
+                                                        style: ButtonStyle(
+                                                          elevation:
+                                                              WidgetStateProperty.all(
+                                                                5.0,
+                                                              ),
+                                                        ),
+                                                        onPressed: () {},
+                                                        child: Text("+"),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(
+                                            height: 200,
+                                            width: double.infinity,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  width: 120,
+                                                  decoration: ShapeDecoration(
+                                                    color: AppColor.orange,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                            topRight:
+                                                                Radius.circular(
+                                                                  40,
+                                                                ),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                  40,
+                                                                ),
+                                                          ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                Align(
+                                                  alignment:
+                                                      Alignment.centerRight,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.symmetric(
+                                                          horizontal: 20,
+                                                        ),
+                                                    child: Container(
+                                                      height: 160,
+                                                      width: double.infinity,
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                            left: 50,
+                                                            right: 40,
+                                                          ),
+                                                      decoration: ShapeDecoration(
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.only(
+                                                            topLeft:
+                                                                Radius.circular(
+                                                                  40,
+                                                                ),
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                  40,
+                                                                ),
+                                                            topRight:
+                                                                Radius.circular(
+                                                                  10,
+                                                                ),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                  10,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                        shadows: [
+                                                          BoxShadow(
+                                                            color: AppColor
+                                                                .placeholder
+                                                                .withOpacity(
+                                                                  0.3,
+                                                                ),
+                                                            offset: Offset(
+                                                              0,
+                                                              5,
+                                                            ),
+                                                            blurRadius: 5,
+                                                          ),
+                                                        ],
+                                                        color: Colors.white,
+                                                      ),
+                                                      child: Column(
+                                                        mainAxisAlignment:
+                                                            MainAxisAlignment
+                                                                .center,
+                                                        children: [
+                                                          Text("Tổng tiền"),
+                                                          SizedBox(height: 10),
+                                                          Text(
+                                                            "1.500.000 đ",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  AppColor
+                                                                      .primary,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                              fontSize: 20,
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 10),
+                                                          SizedBox(
+                                                            width: 200,
+                                                            child: ElevatedButton(
+                                                              onPressed: () {},
+                                                              child: Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Image.asset(
+                                                                    Helper.getAssetName(
+                                                                      "add_to_cart.png",
+                                                                      "virtual",
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    "Thêm vào giỏ",
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ],
                                                       ),
                                                     ),
-                                                    SizedBox(width: 5),
-                                                    ElevatedButton(
-                                                      style: ButtonStyle(
-                                                        elevation:
-                                                            WidgetStateProperty.all(
-                                                              5.0,
-                                                            ),
-                                                      ),
-                                                      onPressed: () {},
-                                                      child: Text("+"),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          height: 200,
-                                          width: double.infinity,
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                width: 120,
-                                                decoration: ShapeDecoration(
-                                                  color: AppColor.orange,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                          topRight:
-                                                              Radius.circular(
-                                                                40,
-                                                              ),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                40,
-                                                              ),
-                                                        ),
                                                   ),
                                                 ),
-                                              ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: Padding(
+                                                Padding(
                                                   padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 20,
+                                                      const EdgeInsets.only(
+                                                        right: 20,
                                                       ),
-                                                  child: Container(
-                                                    height: 160,
-                                                    width: double.infinity,
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                          left: 50,
-                                                          right: 40,
-                                                        ),
-                                                    decoration: ShapeDecoration(
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius: BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                40,
-                                                              ),
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                40,
-                                                              ),
-                                                          topRight:
-                                                              Radius.circular(
-                                                                10,
-                                                              ),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                10,
-                                                              ),
-                                                        ),
-                                                      ),
-                                                      shadows: [
-                                                        BoxShadow(
-                                                          color: AppColor
-                                                              .placeholder
-                                                              .withOpacity(0.3),
-                                                          offset: Offset(0, 5),
-                                                          blurRadius: 5,
-                                                        ),
-                                                      ],
-                                                      color: Colors.white,
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text("Total Price"),
-                                                        SizedBox(height: 10),
-                                                        Text(
-                                                          "LKR 1500",
-                                                          style: TextStyle(
-                                                            color:
-                                                                AppColor
-                                                                    .primary,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 20,
-                                                          ),
-                                                        ),
-                                                        SizedBox(height: 10),
-                                                        SizedBox(
-                                                          width: 200,
-                                                          child: ElevatedButton(
-                                                            onPressed: () {},
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Image.asset(
-                                                                  Helper.getAssetName(
-                                                                    "add_to_cart.png",
-                                                                    "virtual",
-                                                                  ),
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Container(
+                                                      width: 60,
+                                                      height: 60,
+                                                      decoration:
+                                                          ShapeDecoration(
+                                                            color: Colors.white,
+                                                            shadows: [
+                                                              BoxShadow(
+                                                                color: AppColor
+                                                                    .placeholder
+                                                                    .withOpacity(
+                                                                      0.3,
+                                                                    ),
+                                                                offset: Offset(
+                                                                  0,
+                                                                  5,
                                                                 ),
-                                                                Text(
-                                                                  "Add to Cart",
-                                                                ),
-                                                              ],
-                                                            ),
+                                                                blurRadius: 5,
+                                                              ),
+                                                            ],
+                                                            shape:
+                                                                CircleBorder(),
                                                           ),
+                                                      child: Image.asset(
+                                                        Helper.getAssetName(
+                                                          "cart_filled.png",
+                                                          "virtual",
                                                         ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              Padding(
-                                                padding: const EdgeInsets.only(
-                                                  right: 20,
-                                                ),
-                                                child: Align(
-                                                  alignment:
-                                                      Alignment.centerRight,
-                                                  child: Container(
-                                                    width: 60,
-                                                    height: 60,
-                                                    decoration: ShapeDecoration(
-                                                      color: Colors.white,
-                                                      shadows: [
-                                                        BoxShadow(
-                                                          color: AppColor
-                                                              .placeholder
-                                                              .withOpacity(0.3),
-                                                          offset: Offset(0, 5),
-                                                          blurRadius: 5,
-                                                        ),
-                                                      ],
-                                                      shape: CircleBorder(),
-                                                    ),
-                                                    child: Image.asset(
-                                                      Helper.getAssetName(
-                                                        "cart_filled.png",
-                                                        "virtual",
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -606,7 +625,7 @@ class IndividualItem extends StatelessWidget {
               ],
             ),
           ),
-          Positioned(bottom: 0, left: 0, child: CustomNavBar()),
+          Positioned(bottom: 0, left: 0, right: 0, child: CustomNavBar()),
         ],
       ),
     );

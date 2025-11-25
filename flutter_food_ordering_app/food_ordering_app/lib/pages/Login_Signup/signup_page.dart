@@ -52,11 +52,13 @@ class _SignUpPageState extends State<SignUpPage> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Đăng ký thành công')));
-        Navigator.pop(context, true);
+        // Navigate về màn hình login thay vì pop để tránh màn hình đen
+        Navigator.pushReplacementNamed(context, Login.routeName);
       } else {
         throw Exception('Status code: ${response.statusCode}');
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Đăng ký thất bại: $e')));

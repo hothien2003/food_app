@@ -13,65 +13,76 @@ class NotificationScreen extends StatelessWidget {
       body: Stack(
         children: [
           SafeArea(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        icon: Icon(Icons.arrow_back_ios_rounded),
-                      ),
-                      Expanded(
-                        child: Text(
-                          "Notifications",
-                          style: Helper.getTheme(context).headlineMedium,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(bottom: 100),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          icon: Icon(Icons.arrow_back_ios_rounded),
                         ),
-                      ),
-                      Image.asset(Helper.getAssetName("cart.png", "virtual")),
-                    ],
+                        Expanded(
+                          child: Text(
+                            "Thông báo",
+                            style: Helper.getTheme(context).headlineMedium,
+                          ),
+                        ),
+                        Image.asset(Helper.getAssetName("cart.png", "virtual")),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 20),
-                NotiCard(title: "Your order has been picked up", time: "Now"),
-                NotiCard(
-                  title: "Your order has been delivered",
-                  time: "1 h ago",
-                  color: AppColor.placeholderBg,
-                ),
-                NotiCard(
-                  title: "Lorem ipsum dolor sit amet, consectetur",
-                  time: "3 h ago",
-                ),
-                NotiCard(
-                  title: "Lorem ipsum dolor sit amet, consectetur",
-                  time: "5 h ago",
-                ),
-                NotiCard(
-                  title: "Lorem ipsum dolor sit amet, consectetur",
-                  time: "05 Sep 2020",
-                  color: AppColor.placeholderBg,
-                ),
-                NotiCard(
-                  title: "Lorem ipsum dolor sit amet, consectetur",
-                  time: "12 Aug 2020",
-                  color: AppColor.placeholderBg,
-                ),
-                NotiCard(
-                  title: "Lorem ipsum dolor sit amet, consectetur",
-                  time: "20 Jul 2020",
-                ),
-                NotiCard(
-                  title: "Lorem ipsum dolor sit amet, consectetur",
-                  time: "12 Jul 2020",
-                ),
-              ],
+                  SizedBox(height: 20),
+                  NotiCard(
+                    title: "Đơn hàng của bạn đã được lấy",
+                    time: "Vừa xong",
+                  ),
+                  NotiCard(
+                    title: "Đơn hàng của bạn đã được giao",
+                    time: "1 giờ trước",
+                    color: AppColor.placeholderBg,
+                  ),
+                  NotiCard(
+                    title: "Tài xế đang chờ bạn ở sảnh",
+                    time: "3 giờ trước",
+                  ),
+                  NotiCard(
+                    title: "Mã giảm giá mới vừa được thêm",
+                    time: "5 giờ trước",
+                  ),
+                  NotiCard(
+                    title: "Bạn đã đánh giá nhà hàng LaVilla",
+                    time: "05 Thg 9 2020",
+                    color: AppColor.placeholderBg,
+                  ),
+                  NotiCard(
+                    title: "Điểm thưởng tháng 8 đã được cộng",
+                    time: "12 Thg 8 2020",
+                    color: AppColor.placeholderBg,
+                  ),
+                  NotiCard(
+                    title: "Đã hoàn tiền đơn #FD1245",
+                    time: "20 Thg 7 2020",
+                  ),
+                  NotiCard(
+                    title: "Cập nhật chính sách giao hàng",
+                    time: "12 Thg 7 2020",
+                  ),
+                ],
+              ),
             ),
           ),
-          Positioned(bottom: 0, left: 0, child: CustomNavBar(menu: true)),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: CustomNavBar(menu: true),
+          ),
         ],
       ),
     );
@@ -95,8 +106,8 @@ class NotiCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
       width: double.infinity,
+      constraints: BoxConstraints(minHeight: 60),
       decoration: BoxDecoration(
         color: _color,
         border: Border(

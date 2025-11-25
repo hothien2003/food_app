@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import '../api/api_nguoidung.dart';
 import '../models/NguoiDung.dart';
 import '../const/colors.dart';
-import '../screens/loginScreen.dart';
+import 'package:food_ordering_app/pages/Login_Signup/login.dart';
 import '../utils/helper.dart';
 // ignore: unused_import
 import '../widgets/customTextInput.dart';
@@ -52,11 +52,13 @@ class _SignUpPageState extends State<SignUpPage> {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(const SnackBar(content: Text('Đăng ký thành công')));
-        Navigator.pop(context, true);
+        // Navigate về màn hình login thay vì pop để tránh màn hình đen
+        Navigator.pushReplacementNamed(context, Login.routeName);
       } else {
         throw Exception('Status code: ${response.statusCode}');
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(SnackBar(content: Text('Đăng ký thất bại: $e')));
@@ -172,7 +174,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     onTap: () {
                       Navigator.of(
                         context,
-                      ).pushReplacementNamed(LoginScreen.routeName);
+                      ).pushReplacementNamed(Login.routeName);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

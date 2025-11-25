@@ -56,6 +56,11 @@ namespace WebAPI.Controllers
             try
             {
                 await _context.SaveChangesAsync();
+                var nguoidung = await _context.NguoiDungs.FindAsync(id);
+                return Ok(
+                    new {message = "Cập nhật thành công", 
+                    data = nguoidung}
+                );
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -68,8 +73,6 @@ namespace WebAPI.Controllers
                     throw;
                 }
             }
-
-            return NoContent();
         }
 
         // POST: api/NguoiDung
@@ -80,7 +83,11 @@ namespace WebAPI.Controllers
             _context.NguoiDungs.Add(nguoiDung);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetNguoiDung", new { id = nguoiDung.MaNguoiDung }, nguoiDung);
+            // return CreatedAtAction("GetNguoiDung", new { id = nguoiDung.MaNguoiDung }, nguoiDung);
+             return Ok(
+                    new {message = "Thêm thành công", 
+                    data = nguoiDung}
+                );
         }
 
         // DELETE: api/NguoiDung/5
@@ -96,7 +103,10 @@ namespace WebAPI.Controllers
             _context.NguoiDungs.Remove(nguoiDung);
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return Ok(
+                    new {message = "Xóa thành công", 
+                    data = nguoiDung}
+                );
         }
 
         private bool NguoiDungExists(int id)

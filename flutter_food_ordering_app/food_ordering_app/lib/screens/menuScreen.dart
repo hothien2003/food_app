@@ -163,7 +163,12 @@ class MenuScreen extends StatelessWidget {
               ],
             ),
           ),
-          Positioned(bottom: 0, left: 0, child: CustomNavBar(menu: true)),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: CustomNavBar(menu: true),
+          ),
         ],
       ),
     );

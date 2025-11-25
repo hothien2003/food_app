@@ -10,7 +10,7 @@ class GeminiService {
   List<MonAn>? _cachedFoods;
 
   GeminiService({required this.apiKey}) {
-    model = GenerativeModel(model: 'gemini-2.0-flash', apiKey: apiKey);
+    model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
   }
 
   // Lấy tất cả dữ liệu món ăn từ CSV

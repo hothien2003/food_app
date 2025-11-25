@@ -19,20 +19,20 @@ class _IntroScreenState extends State<IntroScreen> {
   final List<Map<String, String>> _pages = [
     {
       "image": "vector1.png",
-      "title": "Find Food You Love",
+      "title": "Tìm món bạn yêu thích",
       "desc":
-          "Discover the best foods from over 1,000 restaurants and fast delivery to your doorstep",
+          "Khám phá hơn 1.000 nhà hàng cùng dịch vụ giao nhanh tận cửa.",
     },
     {
       "image": "vector2.png",
-      "title": "Fast Delivery",
-      "desc": "Fast food delivery to your home, office wherever you are",
+      "title": "Giao hàng nhanh",
+      "desc": "Giao món đến nhà hoặc văn phòng dù bạn ở đâu.",
     },
     {
       "image": "vector3.png",
-      "title": "Live Tracking",
+      "title": "Theo dõi trực tiếp",
       "desc":
-          "Real time tracking of your food on the app once you placed the order",
+          "Theo dõi hành trình món ăn ngay trên ứng dụng sau khi đặt.",
     },
   ];
 
@@ -112,7 +112,7 @@ class _IntroScreenState extends State<IntroScreen> {
                         context,
                       ).pushReplacementNamed(HomeScreen.routeName);
                     },
-                    child: const Text("Next"),
+                    child: const Text("Tiếp tục"),
                   ),
                 ),
                 const Spacer(),

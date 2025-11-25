@@ -29,7 +29,7 @@ class CheckoutScreen extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        "Checkout",
+                        "Đặt hàng",
                         style: Helper.getTheme(context).headlineMedium,
                       ),
                     ),
@@ -38,7 +38,7 @@ class CheckoutScreen extends StatelessWidget {
                 SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Text("Delivery Address"),
+                  child: Text("Địa chỉ giao hàng"),
                 ),
                 SizedBox(height: 10),
                 Padding(
@@ -60,7 +60,7 @@ class CheckoutScreen extends StatelessWidget {
                           ).pushNamed(ChangeAddressScreen.routeName);
                         },
                         child: Text(
-                          "Change",
+                          "Thay đổi",
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -79,7 +79,7 @@ class CheckoutScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Payment method"),
+                      Text("Phương thức thanh toán"),
                       TextButton(
                         onPressed: () {
                           showModalBottomSheet(
@@ -112,7 +112,7 @@ class CheckoutScreen extends StatelessWidget {
                                       child: Row(
                                         children: [
                                           Text(
-                                            "Add Credit/Debit Card",
+                                            "Thêm thẻ tín dụng/ghi nợ",
                                             style:
                                                 Helper.getTheme(
                                                   context,
@@ -138,7 +138,7 @@ class CheckoutScreen extends StatelessWidget {
                                         horizontal: 20.0,
                                       ),
                                       child: CustomTextInput(
-                                        hintText: "card Number",
+                                        hintText: "Số thẻ",
                                       ),
                                     ),
                                     SizedBox(height: 20),
@@ -150,7 +150,7 @@ class CheckoutScreen extends StatelessWidget {
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Text("Expiry"),
+                                          Text("Hạn sử dụng"),
                                           SizedBox(
                                             height: 50,
                                             width: 100,
@@ -177,7 +177,7 @@ class CheckoutScreen extends StatelessWidget {
                                         horizontal: 20.0,
                                       ),
                                       child: CustomTextInput(
-                                        hintText: "Security Code",
+                                        hintText: "Mã bảo mật",
                                       ),
                                     ),
                                     SizedBox(height: 20),
@@ -185,18 +185,14 @@ class CheckoutScreen extends StatelessWidget {
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 20.0,
                                       ),
-                                      child: CustomTextInput(
-                                        hintText: "First Name",
-                                      ),
+                                      child: CustomTextInput(hintText: "Tên"),
                                     ),
                                     SizedBox(height: 20),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
                                         horizontal: 20.0,
                                       ),
-                                      child: CustomTextInput(
-                                        hintText: "Last Name",
-                                      ),
+                                      child: CustomTextInput(hintText: "Họ"),
                                     ),
                                     SizedBox(height: 20),
                                     Padding(
@@ -212,16 +208,15 @@ class CheckoutScreen extends StatelessWidget {
                                                 Helper.getScreenWidth(context) *
                                                 0.4,
                                             child: Text(
-                                              "You can remove this card at anytime",
+                                              "Bạn có thể xóa thẻ này bất cứ lúc nào",
                                             ),
                                           ),
                                           Switch(
                                             value: false,
                                             onChanged: (_) {},
-                                            thumbColor:
-                                                WidgetStateProperty.all(
-                                                  AppColor.secondary,
-                                                ),
+                                            thumbColor: WidgetStateProperty.all(
+                                              AppColor.secondary,
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -243,7 +238,7 @@ class CheckoutScreen extends StatelessWidget {
                                             children: [
                                               Icon(Icons.add),
                                               SizedBox(width: 40),
-                                              Text("Add Card"),
+                                              Text("Thêm thẻ"),
                                               SizedBox(width: 40),
                                             ],
                                           ),
@@ -260,7 +255,7 @@ class CheckoutScreen extends StatelessWidget {
                           children: [
                             Icon(Icons.add),
                             Text(
-                              "Add Card",
+                              "Thêm thẻ",
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ],
@@ -270,10 +265,10 @@ class CheckoutScreen extends StatelessWidget {
                   ),
                 ),
                 PaymentCard(
-                  widget: Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("Cash on delivery"),
+                      Text("Tiền mặt khi nhận hàng"),
                       Container(
                         width: 15,
                         height: 15,
@@ -288,7 +283,7 @@ class CheckoutScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 PaymentCard(
-                  widget: Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
@@ -317,7 +312,7 @@ class CheckoutScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 PaymentCard(
-                  widget: Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
@@ -359,9 +354,9 @@ class CheckoutScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Sub Total"),
+                          Text("Tạm tính"),
                           Text(
-                            "\$68",
+                            "680.000 đ",
                             style: Helper.getTheme(context).displaySmall,
                           ),
                         ],
@@ -370,9 +365,9 @@ class CheckoutScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Delivery Cost"),
+                          Text("Phí giao hàng"),
                           Text(
-                            "\$2",
+                            "20.000 đ",
                             style: Helper.getTheme(context).displaySmall,
                           ),
                         ],
@@ -381,9 +376,9 @@ class CheckoutScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Discount"),
+                          Text("Giảm giá"),
                           Text(
-                            "-\$4",
+                            "-40.000 đ",
                             style: Helper.getTheme(context).displaySmall,
                           ),
                         ],
@@ -396,9 +391,9 @@ class CheckoutScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Total"),
+                          Text("Tổng cộng"),
                           Text(
-                            "\$66",
+                            "660.000 đ",
                             style: Helper.getTheme(context).displaySmall,
                           ),
                         ],
@@ -451,7 +446,7 @@ class CheckoutScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 20),
                                   Text(
-                                    "Thank You!",
+                                    "Cảm ơn bạn!",
                                     style: TextStyle(
                                       color: AppColor.primary,
                                       fontWeight: FontWeight.w900,
@@ -460,7 +455,7 @@ class CheckoutScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 10),
                                   Text(
-                                    "for your order",
+                                    "vì đã đặt hàng",
                                     style: Helper.getTheme(context)
                                         .headlineLarge!
                                         .copyWith(color: AppColor.primary),
@@ -472,7 +467,7 @@ class CheckoutScreen extends StatelessWidget {
                                       horizontal: 20.0,
                                     ),
                                     child: Text(
-                                      "Your order is now being processed. We will let you know once the order is picked from the outlet. Check the status of your order",
+                                      "Đơn hàng của bạn đang được xử lý. Chúng tôi sẽ thông báo khi tài xế nhận món. Bạn có thể theo dõi trạng thái đơn ngay bây giờ.",
                                     ),
                                   ),
                                   SizedBox(height: 60),
@@ -485,7 +480,7 @@ class CheckoutScreen extends StatelessWidget {
                                       width: double.infinity,
                                       child: ElevatedButton(
                                         onPressed: () {},
-                                        child: Text("Track My Order"),
+                                        child: Text("Theo dõi đơn hàng"),
                                       ),
                                     ),
                                   ),
@@ -502,7 +497,7 @@ class CheckoutScreen extends StatelessWidget {
                                         );
                                       },
                                       child: Text(
-                                        "Back To Home",
+                                        "Về trang chủ",
                                         style: TextStyle(
                                           color: AppColor.primary,
                                           fontWeight: FontWeight.bold,
@@ -516,14 +511,14 @@ class CheckoutScreen extends StatelessWidget {
                           },
                         );
                       },
-                      child: Text("Send Order"),
+                      child: Text("Gửi đơn hàng"),
                     ),
                   ),
                 ),
               ],
             ),
           ),
-          Positioned(bottom: 0, left: 0, child: CustomNavBar()),
+          Positioned(bottom: 0, left: 0, right: 0, child: CustomNavBar()),
         ],
       ),
     );
@@ -531,10 +526,9 @@ class CheckoutScreen extends StatelessWidget {
 }
 
 class PaymentCard extends StatelessWidget {
-  const PaymentCard({super.key, required Widget widget})
-    : _widget = widget;
+  const PaymentCard({super.key, required this.child});
 
-  final Widget _widget;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -551,7 +545,7 @@ class PaymentCard extends StatelessWidget {
           ),
           color: AppColor.placeholderBg,
         ),
-        child: _widget,
+        child: child,
       ),
     );
   }

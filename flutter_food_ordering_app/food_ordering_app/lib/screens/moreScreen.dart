@@ -30,7 +30,7 @@ class MoreScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "More",
+                          "Khác",
                           style: Theme.of(context).textTheme.headlineMedium,
                         ),
                         Image.asset(Helper.getAssetName("cart.png", "virtual")),
@@ -41,7 +41,7 @@ class MoreScreen extends StatelessWidget {
                       image: Image.asset(
                         Helper.getAssetName("income.png", "virtual"),
                       ),
-                      name: "Payment Details",
+                      name: "Thông tin thanh toán",
                       handler: () {
                         Navigator.of(
                           context,
@@ -53,7 +53,7 @@ class MoreScreen extends StatelessWidget {
                       image: Image.asset(
                         Helper.getAssetName("shopping_bag.png", "virtual"),
                       ),
-                      name: "My Orders",
+                      name: "Đơn hàng của tôi",
                       handler: () {
                         Navigator.of(
                           context,
@@ -65,7 +65,7 @@ class MoreScreen extends StatelessWidget {
                       image: Image.asset(
                         Helper.getAssetName("noti.png", "virtual"),
                       ),
-                      name: "Notifications",
+                      name: "Thông báo",
                       isNoti: true,
                       handler: () {
                         Navigator.of(
@@ -78,7 +78,7 @@ class MoreScreen extends StatelessWidget {
                       image: Image.asset(
                         Helper.getAssetName("mail.png", "virtual"),
                       ),
-                      name: "Inbox",
+                      name: "Hộp thư",
                       handler: () {
                         Navigator.of(context).pushNamed(InboxScreen.routeName);
                       },
@@ -88,7 +88,7 @@ class MoreScreen extends StatelessWidget {
                       image: Image.asset(
                         Helper.getAssetName("info.png", "virtual"),
                       ),
-                      name: "About Us",
+                      name: "Về chúng tôi",
                       handler: () {
                         Navigator.of(context).pushNamed(AboutScreen.routeName);
                       },
@@ -99,7 +99,12 @@ class MoreScreen extends StatelessWidget {
               ),
             ),
           ),
-          const Positioned(bottom: 0, left: 0, child: CustomNavBar(more: true)),
+          const Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: CustomNavBar(more: true),
+          ),
         ],
       ),
     );

@@ -31,10 +31,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/images/food/
     - assets/images/real/
     - assets/images/virtual/
-    - assets/data/
   fonts:
     - family: Metropolis
       fonts:

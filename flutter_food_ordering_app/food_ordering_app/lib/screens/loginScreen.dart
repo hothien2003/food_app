@@ -22,18 +22,19 @@ class LoginScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 30),
             child: Column(
               children: [
-                Text("Login", style: Helper.getTheme(context).headlineSmall),
+                Text("Đăng nhập", style: Helper.getTheme(context).headlineSmall),
                 Spacer(),
-                Text('Add your details to login'),
+                Text('Nhập thông tin để đăng nhập'),
                 Spacer(),
-                CustomTextInput(hintText: "Your email"),
+                CustomTextInput(hintText: "Email của bạn"),
                 Spacer(),
-                CustomTextInput(hintText: "password"),
+                CustomTextInput(hintText: "Mật khẩu"),
                 Spacer(),
                 SizedBox(
                   height: 50,
                   width: double.infinity,
-                  child: ElevatedButton(onPressed: () {}, child: Text("Login")),
+                  child:
+                      ElevatedButton(onPressed: () {}, child: Text("Đăng nhập")),
                 ),
                 Spacer(),
                 GestureDetector(
@@ -42,10 +43,10 @@ class LoginScreen extends StatelessWidget {
                       context,
                     ).pushReplacementNamed(ForgetPwScreen.routeName);
                   },
-                  child: Text("Forget your password?"),
+                  child: Text("Bạn quên mật khẩu?"),
                 ),
                 Spacer(flex: 2),
-                Text("or Login With"),
+                Text("hoặc đăng nhập với"),
                 Spacer(),
                 SizedBox(
                   height: 50,
@@ -62,7 +63,7 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         Image.asset(Helper.getAssetName("fb.png", "virtual")),
                         SizedBox(width: 30),
-                        Text("Login with Facebook"),
+                        Text("Đăng nhập với Facebook"),
                       ],
                     ),
                   ),
@@ -85,7 +86,7 @@ class LoginScreen extends StatelessWidget {
                           Helper.getAssetName("google.png", "virtual"),
                         ),
                         SizedBox(width: 30),
-                        Text("Login with Google"),
+                        Text("Đăng nhập với Google"),
                       ],
                     ),
                   ),
@@ -100,9 +101,9 @@ class LoginScreen extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Don't have an Account?"),
+                      Text("Chưa có tài khoản?"),
                       Text(
-                        "Sign Up",
+                        "Đăng ký",
                         style: TextStyle(
                           color: AppColor.orange,
                           fontWeight: FontWeight.bold,

@@ -1,9 +1,18 @@
 import 'dart:convert';
+import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 import '../models/GioHang.dart';
 
 class ApiGioHang {
-  final String baseUri = "http://10.0.2.2:5000/api/GioHang";
+  String get baseUri {
+    if (Platform.isAndroid) {
+      // Sử dụng 10.0.2.2 cho máy ảo Android
+      return "http://10.0.2.2:5000/api/GioHang";
+    } else {
+      // Sử dụng localhost cho Windows và các nền tảng khác
+      return "http://localhost:5000/api/GioHang";
+    }
+  }
 
   // Lấy toàn bộ danh sách giỏ hàng
   Future<List<GioHang>> getGioHangData() async {

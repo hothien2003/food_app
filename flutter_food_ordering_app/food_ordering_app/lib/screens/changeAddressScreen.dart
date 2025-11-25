@@ -26,7 +26,7 @@ class ChangeAddressScreen extends StatelessWidget {
                       icon: const Icon(Icons.arrow_back_ios_rounded),
                     ),
                     Text(
-                      "Change Address",
+                      "Thay đổi địa chỉ",
                       style: Helper.getTheme(context).headlineSmall,
                     ),
                   ],
@@ -80,7 +80,7 @@ class ChangeAddressScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Your Current Location",
+                                "Vị trí hiện tại của bạn",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 14,
@@ -114,7 +114,7 @@ class ChangeAddressScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                custom.SearchBar(title: "Search Address"),
+                custom.SearchBar(title: "Tìm kiếm địa chỉ"),
                 const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -136,7 +136,7 @@ class ChangeAddressScreen extends StatelessWidget {
                       const SizedBox(width: 10),
                       const Expanded(
                         child: Text(
-                          "Choose a saved place",
+                          "Chọn địa chỉ đã lưu",
                           style: TextStyle(color: AppColor.primary),
                         ),
                       ),

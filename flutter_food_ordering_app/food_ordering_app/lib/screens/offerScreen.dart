@@ -25,7 +25,7 @@ class OfferScreen extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Latest Offers",
+                            "Ưu đãi mới nhất",
                             style: Helper.getTheme(context).headlineMedium,
                           ),
                           Image.asset(
@@ -38,7 +38,7 @@ class OfferScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20.0),
                       child: Row(
-                        children: [Text("Find discounts, Offer special")],
+                        children: [Text("Tìm kiếm giảm giá, ưu đãi đặc biệt")],
                       ),
                     ),
                     SizedBox(height: 40),
@@ -51,7 +51,7 @@ class OfferScreen extends StatelessWidget {
                             width: Helper.getScreenWidth(context) * 0.4,
                             child: ElevatedButton(
                               onPressed: () {},
-                              child: Text("Check Offers"),
+                              child: Text("Xem ưu đãi"),
                             ),
                           ),
                         ],
@@ -85,7 +85,12 @@ class OfferScreen extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(bottom: 0, left: 0, child: CustomNavBar(offer: true)),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: CustomNavBar(offer: true),
+          ),
         ],
       ),
     );
@@ -130,7 +135,7 @@ class OfferCard extends StatelessWidget {
                 SizedBox(width: 5),
                 Text("4.9", style: TextStyle(color: AppColor.orange)),
                 SizedBox(width: 5),
-                Text("(124 ratings) Cafe"),
+                Text("(124 đánh giá) Cà phê"),
                 SizedBox(width: 5),
                 Padding(
                   padding: const EdgeInsets.only(bottom: 5),
@@ -142,7 +147,7 @@ class OfferCard extends StatelessWidget {
                     ),
                   ),
                 ),
-                Text(" Western Food"),
+                Text(" Ẩm thực Âu"),
               ],
             ),
           ),
