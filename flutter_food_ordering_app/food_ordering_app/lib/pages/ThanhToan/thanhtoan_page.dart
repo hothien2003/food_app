@@ -3,9 +3,14 @@ import 'package:food_ordering_app/api/api_donhang.dart';
 import 'package:food_ordering_app/api/api_giohang.dart';
 import 'package:food_ordering_app/const/colors.dart';
 import 'package:food_ordering_app/models/GioHang.dart';
+import 'package:food_ordering_app/models/Payment.dart';
 import 'package:food_ordering_app/pages/DonHang/chitiet_donhang_page.dart';
 import 'package:food_ordering_app/utils/image_util.dart';
 import 'package:food_ordering_app/utils/shared_preferences_helper.dart';
+import 'package:food_ordering_app/services/notification_service.dart';
+import 'package:food_ordering_app/screens/card_payment_screen.dart';
+import 'package:food_ordering_app/screens/ewallet_payment_screen.dart';
+import 'package:food_ordering_app/screens/qr_banking_payment_screen.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 
@@ -32,7 +37,7 @@ class _ThanhToanPageState extends State<ThanhToanPage> {
   final TextEditingController _sdtController = TextEditingController();
   final TextEditingController _ghiChuController = TextEditingController();
 
-  String _selectedPaymentMethod = 'Offline';
+  PaymentMethodType _selectedPaymentMethod = PaymentMethodType.cod;
   bool _isSubmitting = false;
 
   @override
@@ -49,6 +54,79 @@ class _ThanhToanPageState extends State<ThanhToanPage> {
       return;
     }
 
+    // For COD, process order directly
+    if (_selectedPaymentMethod == PaymentMethodType.cod) {
+      await _processOrder();
+      return;
+    }
+
+    // For other payment methods, navigate to payment screens first
+    if (!mounted) return;
+
+    // Calculate total including shipping fee
+    const shippingFee = 15000.0;
+    final total = widget.tongTien + shippingFee;
+
+    // Generate a temporary order ID for payment screens
+    final tempOrderId = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+
+    switch (_selectedPaymentMethod) {
+      case PaymentMethodType.momo:
+      case PaymentMethodType.zalopay:
+        final result = await Navigator.push<PaymentResult>(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) => EWalletPaymentScreen(
+                  walletType: _selectedPaymentMethod,
+                  orderId: tempOrderId,
+                  amount: total,
+                ),
+          ),
+        );
+
+        if (result != null && result.isSuccess && mounted) {
+          await _processOrder(transactionId: result.transactionId);
+        }
+        break;
+
+      case PaymentMethodType.card:
+        final result = await Navigator.push<PaymentResult>(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) =>
+                    CardPaymentScreen(orderId: tempOrderId, amount: total),
+          ),
+        );
+
+        if (result != null && result.isSuccess && mounted) {
+          await _processOrder(transactionId: result.transactionId);
+        }
+        break;
+
+      case PaymentMethodType.banking:
+        final result = await Navigator.push<PaymentResult>(
+          context,
+          MaterialPageRoute(
+            builder:
+                (context) =>
+                    QRBankingPaymentScreen(orderId: tempOrderId, amount: total),
+          ),
+        );
+
+        if (result != null && result.isSuccess && mounted) {
+          await _processOrder(transactionId: result.transactionId);
+        }
+        break;
+
+      case PaymentMethodType.cod:
+        // Already handled above
+        break;
+    }
+  }
+
+  Future<void> _processOrder({String? transactionId}) async {
     setState(() {
       _isSubmitting = true;
     });
@@ -62,8 +140,7 @@ class _ThanhToanPageState extends State<ThanhToanPage> {
 
       // Lấy mã nhà hàng (giả định tất cả món ăn cùng một nhà hàng)
       final firstValidItem = widget.gioHangList.firstWhere(
-        (item) =>
-            item.maMonAnNavigation != null,
+        (item) => item.maMonAnNavigation != null,
         orElse:
             () => throw Exception('Không tìm thấy thông tin nhà hàng hợp lệ'),
       );
@@ -73,9 +150,7 @@ class _ThanhToanPageState extends State<ThanhToanPage> {
       final chiTietDonHangs =
           widget.gioHangList
               .where(
-                (item) =>
-                    item.maMonAnNavigation != null &&
-                    item.soLuong > 0,
+                (item) => item.maMonAnNavigation != null && item.soLuong > 0,
               )
               .map(
                 (item) => {
@@ -101,7 +176,10 @@ class _ThanhToanPageState extends State<ThanhToanPage> {
         soDienThoai: _sdtController.text,
         ghiChu:
             _ghiChuController.text.isNotEmpty ? _ghiChuController.text : null,
-        phuongThucThanhToan: _selectedPaymentMethod,
+        phuongThucThanhToan:
+            _selectedPaymentMethod == PaymentMethodType.cod
+                ? 'Offline'
+                : 'Online',
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -120,6 +198,26 @@ class _ThanhToanPageState extends State<ThanhToanPage> {
         // Chỉ xóa giỏ hàng sau khi đặt hàng thành công và lấy được ID đơn hàng
         if (maDonHang != null) {
           await _clearCart();
+
+          // Thêm thông báo vào hệ thống
+          final restaurantName =
+              firstValidItem
+                  .maMonAnNavigation
+                  ?.maNhaHangNavigation
+                  ?.tenNhaHang ??
+              'Nhà hàng';
+          await NotificationService.instance.notifyOrderPlaced(
+            maDonHang,
+            restaurantName,
+          );
+
+          // Thông báo thanh toán thành công (chỉ cho payment online)
+          if (_selectedPaymentMethod != PaymentMethodType.cod) {
+            await NotificationService.instance.notifyPaymentSuccess(
+              maDonHang,
+              widget.tongTien,
+            );
+          }
         }
 
         if (!mounted) return;
@@ -399,38 +497,133 @@ class _ThanhToanPageState extends State<ThanhToanPage> {
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       child: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RadioListTile<String>(
-              title: const Row(
-                children: [
-                  Icon(Icons.money, color: Colors.green),
-                  SizedBox(width: 12),
-                  Flexible(child: Text('Thanh toán khi nhận hàng (COD)')),
-                ],
+            const Text(
+              'Chọn phương thức thanh toán',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppColor.primary,
               ),
-              subtitle: const Text('Thanh toán bằng tiền mặt khi nhận hàng'),
-              value: 'Offline',
-              groupValue: _selectedPaymentMethod,
-              onChanged: (value) {
-                setState(() {
-                  _selectedPaymentMethod = value!;
-                });
-              },
-              activeColor: AppColor.orange,
             ),
+            const SizedBox(height: 16),
+
+            // COD
+            _buildPaymentOption(
+              type: PaymentMethodType.cod,
+              icon: Icons.money,
+              iconColor: Colors.green,
+              title: 'Tiền mặt (COD)',
+              subtitle: 'Thanh toán khi nhận hàng',
+            ),
+
             const Divider(height: 1),
-            RadioListTile<String>(
-              title: const Row(
+
+            // MoMo
+            _buildPaymentOption(
+              type: PaymentMethodType.momo,
+              icon: Icons.smartphone,
+              iconColor: const Color(0xFFAF206B),
+              title: 'Ví MoMo',
+              subtitle: 'Thanh toán qua ví điện tử MoMo',
+            ),
+
+            const Divider(height: 1),
+
+            // ZaloPay
+            _buildPaymentOption(
+              type: PaymentMethodType.zalopay,
+              icon: Icons.account_balance_wallet,
+              iconColor: const Color(0xFF0068FF),
+              title: 'ZaloPay',
+              subtitle: 'Thanh toán qua ví ZaloPay',
+            ),
+
+            const Divider(height: 1),
+
+            // QR Banking
+            _buildPaymentOption(
+              type: PaymentMethodType.banking,
+              icon: Icons.qr_code,
+              iconColor: Colors.blue,
+              title: 'Chuyển khoản QR',
+              subtitle: 'Quét mã QR để chuyển khoản',
+            ),
+
+            const Divider(height: 1),
+
+            // Card
+            _buildPaymentOption(
+              type: PaymentMethodType.card,
+              icon: Icons.credit_card,
+              iconColor: Colors.indigo,
+              title: 'Thẻ tín dụng/Ghi nợ',
+              subtitle: 'Visa, Mastercard, JCB',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaymentOption({
+    required PaymentMethodType type,
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String subtitle,
+  }) {
+    final isSelected = _selectedPaymentMethod == type;
+
+    return InkWell(
+      onTap: () {
+        setState(() {
+          _selectedPaymentMethod = type;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColor.orange.withOpacity(0.1) : null,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 48,
+              height: 48,
+              decoration: BoxDecoration(
+                color: iconColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Icon(icon, color: iconColor, size: 28),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.credit_card, color: Colors.blue),
-                  SizedBox(width: 12),
-                  Text('Thanh toán trực tuyến'),
+                  Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: isSelected ? AppColor.orange : AppColor.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                  ),
                 ],
               ),
-              subtitle: const Text('Thanh toán qua ví điện tử hoặc thẻ'),
-              value: 'Online',
+            ),
+            Radio<PaymentMethodType>(
+              value: type,
               groupValue: _selectedPaymentMethod,
               onChanged: (value) {
                 setState(() {
@@ -439,78 +632,6 @@ class _ThanhToanPageState extends State<ThanhToanPage> {
               },
               activeColor: AppColor.orange,
             ),
-            if (_selectedPaymentMethod == 'Online')
-              Container(
-                padding: const EdgeInsets.all(12),
-                margin: const EdgeInsets.only(
-                  top: 8,
-                  left: 12,
-                  right: 12,
-                  bottom: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.grey[100],
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Chọn phương thức thanh toán:',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 12),
-                    ListTile(
-                      leading: Image.asset(
-                        'assets/icons/momo.png',
-                        width: 36,
-                        height: 36,
-                        errorBuilder:
-                            (context, error, stackTrace) => const Icon(
-                              Icons.smartphone,
-                              size: 36,
-                              color: Colors.pink,
-                            ),
-                      ),
-                      title: const Text('Ví MoMo'),
-                      dense: true,
-                      onTap: () {
-                        // Xử lý chọn thanh toán MoMo
-                      },
-                    ),
-                    ListTile(
-                      leading: Image.asset(
-                        'assets/icons/zalopay.png',
-                        width: 36,
-                        height: 36,
-                        errorBuilder:
-                            (context, error, stackTrace) => const Icon(
-                              Icons.account_balance_wallet,
-                              size: 36,
-                              color: Colors.blue,
-                            ),
-                      ),
-                      title: const Text('ZaloPay'),
-                      dense: true,
-                      onTap: () {
-                        // Xử lý chọn thanh toán ZaloPay
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(
-                        Icons.credit_card,
-                        size: 36,
-                        color: Colors.indigo,
-                      ),
-                      title: const Text('Thẻ tín dụng/ghi nợ'),
-                      dense: true,
-                      onTap: () {
-                        // Xử lý chọn thanh toán thẻ
-                      },
-                    ),
-                  ],
-                ),
-              ),
           ],
         ),
       ),
@@ -591,20 +712,20 @@ class _ThanhToanPageState extends State<ThanhToanPage> {
   }
 
   Widget _buildCheckoutButton() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: const Offset(0, -3),
-          ),
-        ],
-      ),
-      child: SafeArea(
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.2),
+              spreadRadius: 1,
+              blurRadius: 5,
+              offset: const Offset(0, -3),
+            ),
+          ],
+        ),
         child: SizedBox(
           width: double.infinity,
           child: ElevatedButton(

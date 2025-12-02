@@ -8,6 +8,7 @@ import '../screens/moreScreen.dart';
 import '../screens/offerScreen.dart';
 import '../pages/profile/profile_page.dart';
 import '../utils/helper.dart';
+import '../utils/app_localizations.dart';
 
 class CustomNavBar extends StatelessWidget {
   final bool home;
@@ -74,10 +75,10 @@ class CustomNavBar extends StatelessWidget {
                               ),
                           menu
                               ? Text(
-                                "Menu",
+                                AppLocalizations.of(context).menu,
                                 style: TextStyle(color: AppColor.orange),
                               )
-                              : Text("Menu"),
+                              : Text(AppLocalizations.of(context).menu),
                         ],
                       ),
                     ),
@@ -104,10 +105,10 @@ class CustomNavBar extends StatelessWidget {
                               ),
                           offer
                               ? Text(
-                                "Offers",
+                                AppLocalizations.of(context).offers,
                                 style: TextStyle(color: AppColor.orange),
                               )
-                              : Text("Offers"),
+                              : Text(AppLocalizations.of(context).offers),
                         ],
                       ),
                     ),
@@ -135,10 +136,10 @@ class CustomNavBar extends StatelessWidget {
                               ),
                           profile
                               ? Text(
-                                "Profile",
+                                AppLocalizations.of(context).profile,
                                 style: TextStyle(color: AppColor.orange),
                               )
-                              : Text("Profile"),
+                              : Text(AppLocalizations.of(context).profile),
                         ],
                       ),
                     ),
@@ -165,10 +166,10 @@ class CustomNavBar extends StatelessWidget {
                               ),
                           more
                               ? Text(
-                                "Profile",
+                                AppLocalizations.of(context).more,
                                 style: TextStyle(color: AppColor.orange),
                               )
-                              : Text("More"),
+                              : Text(AppLocalizations.of(context).more),
                         ],
                       ),
                     ),

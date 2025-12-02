@@ -192,7 +192,7 @@ class MyOrderScreen extends StatelessWidget {
                               ).displaySmall!.copyWith(color: AppColor.orange),
                             ),
                           ],
-                        ),
+                        ),  
                         SizedBox(height: 10),
                         Row(
                           children: [

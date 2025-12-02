@@ -6,9 +6,11 @@ import 'package:food_ordering_app/pages/DonHang/donhang_page.dart';
 import 'package:food_ordering_app/pages/GioHang/giohang_page.dart';
 import 'package:food_ordering_app/pages/Login_Signup/login.dart';
 import 'package:food_ordering_app/pages/profile/edit_profile_page.dart';
+import 'package:food_ordering_app/pages/profile/language_page.dart';
 import 'package:food_ordering_app/screens/homeScreen.dart';
 import 'package:food_ordering_app/utils/helper.dart';
 import 'package:food_ordering_app/utils/shared_preferences_helper.dart';
+import 'package:food_ordering_app/utils/app_localizations.dart';
 import 'package:food_ordering_app/widgets/customNavBar.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -64,14 +66,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context);
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          'Tài khoản của tôi',
-          style: TextStyle(
+        title: Text(
+          localizations.myAccount,
+          style: const TextStyle(
             color: AppColor.primary,
             fontWeight: FontWeight.bold,
           ),
@@ -103,18 +106,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
                     // Orders section
                     _buildMenuSection(
-                      title: 'Đơn hàng',
+                      title: localizations.orders,
                       icon: Icons.receipt_long,
                       menuItems: [
                         MenuItem(
-                          title: 'Đơn hàng của tôi',
+                          title: localizations.myOrders,
                           icon: Icons.shopping_bag,
                           onTap: () {
                             Navigator.pushNamed(context, DonHangPage.routeName);
                           },
                         ),
                         MenuItem(
-                          title: 'Giỏ hàng',
+                          title: localizations.cart,
                           icon: Icons.shopping_cart,
                           onTap: () {
                             Navigator.pushNamed(context, GioHangPage.routeName);
@@ -126,11 +129,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
                     // Account section
                     _buildMenuSection(
-                      title: 'Tài khoản',
+                      title: localizations.account,
                       icon: Icons.person,
                       menuItems: [
                         MenuItem(
-                          title: 'Thông tin cá nhân',
+                          title: localizations.personalInfo,
                           icon: Icons.person_outline,
                           onTap: () async {
                             if (userData != null) {
@@ -149,14 +152,14 @@ class _ProfilePageState extends State<ProfilePage> {
                           },
                         ),
                         MenuItem(
-                          title: 'Địa chỉ đã lưu',
+                          title: localizations.savedAddresses,
                           icon: Icons.location_on_outlined,
                           onTap: () {
                             // TODO: Navigate to saved addresses
                           },
                         ),
                         MenuItem(
-                          title: 'Phương thức thanh toán',
+                          title: localizations.paymentMethods,
                           icon: Icons.payment_outlined,
                           onTap: () {
                             // TODO: Navigate to payment methods
@@ -168,18 +171,21 @@ class _ProfilePageState extends State<ProfilePage> {
 
                     // Settings section
                     _buildMenuSection(
-                      title: 'Cài đặt',
+                      title: localizations.settings,
                       icon: Icons.settings,
                       menuItems: [
                         MenuItem(
-                          title: 'Ngôn ngữ',
+                          title: localizations.language,
                           icon: Icons.language,
                           onTap: () {
-                            // TODO: Language settings
+                            Navigator.pushNamed(
+                              context,
+                              LanguagePage.routeName,
+                            );
                           },
                         ),
                         MenuItem(
-                          title: 'Thông báo',
+                          title: localizations.notifications,
                           icon: Icons.notifications_outlined,
                           onTap: () {
                             // TODO: Notification settings
@@ -191,18 +197,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
                     // Help & About section
                     _buildMenuSection(
-                      title: 'Hỗ trợ & Thông tin',
+                      title: localizations.helpInfo,
                       icon: Icons.help_outline,
                       menuItems: [
                         MenuItem(
-                          title: 'Trung tâm hỗ trợ',
+                          title: localizations.helpCenter,
                           icon: Icons.headset_mic_outlined,
                           onTap: () {
                             // TODO: Navigate to help center
                           },
                         ),
                         MenuItem(
-                          title: 'Giới thiệu',
+                          title: localizations.about,
                           icon: Icons.info_outline,
                           onTap: () {
                             // TODO: Navigate to about page
@@ -218,9 +224,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: ElevatedButton.icon(
                         onPressed: _logout,
                         icon: const Icon(Icons.logout, color: Colors.white),
-                        label: const Text(
-                          'Đăng xuất',
-                          style: TextStyle(
+                        label: Text(
+                          localizations.logout,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
@@ -258,12 +264,12 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             const SizedBox(height: 16),
             Text(
-              userData?.hoTen ?? 'Người dùng',
+              userData?.hoTen ?? AppLocalizations.of(context).user,
               style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),
             Text(
-              userData?.email ?? 'Email chưa cung cấp',
+              userData?.email ?? AppLocalizations.of(context).emailNotProvided,
               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
             const SizedBox(height: 16),
@@ -288,7 +294,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   borderRadius: BorderRadius.circular(20),
                 ),
               ),
-              child: const Text('Chỉnh sửa hồ sơ'),
+              child: Text(AppLocalizations.of(context).editProfile),
             ),
           ],
         ),
@@ -360,4 +366,3 @@ class MenuItem {
 
   MenuItem({required this.title, required this.icon, required this.onTap});
 }
-

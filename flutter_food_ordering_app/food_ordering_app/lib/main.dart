@@ -1,7 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:food_ordering_app/configs/DevHttpsOveride.dart';
+import 'package:food_ordering_app/utils/app_localizations.dart';
+import 'package:food_ordering_app/utils/language_helper.dart';
+import 'package:food_ordering_app/pages/profile/language_page.dart';
+import 'package:food_ordering_app/pages/Admin/QL_DonHang/ql_don_hang_page.dart';
 import 'package:food_ordering_app/pages/Admin/QL_MonAn/ql_mon_an_page.dart';
 import 'package:food_ordering_app/pages/Admin/QL_NhaHang/ql_nha_hang_page.dart';
 import 'package:food_ordering_app/pages/Admin/QL_TaiKhoan/ql_tai_khoan_page.dart';
@@ -43,13 +48,51 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => MyAppState();
+
+  static MyAppState? of(BuildContext context) {
+    return context.findAncestorStateOfType<MyAppState>();
+  }
+}
+
+class MyAppState extends State<MyApp> {
+  Locale _locale = const Locale('vi', 'VN');
+
+  @override
+  void initState() {
+    super.initState();
+    _loadSavedLanguage();
+  }
+
+  Future<void> _loadSavedLanguage() async {
+    final languageCode = await LanguageHelper.getSavedLanguage();
+    setState(() {
+      _locale = LanguageHelper.getLocale(languageCode);
+    });
+  }
+
+  void setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Food Ordering App',
+      locale: _locale,
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [Locale('vi', 'VN'), Locale('en', 'US')],
       theme: ThemeData(
         fontFamily: "Metropolis",
         primarySwatch: Colors.red,
@@ -118,8 +161,10 @@ class MyApp extends StatelessWidget {
         ChatbotAIPage.routeName: (context) => ChatbotAIPage(),
         AdminPage.routeName: (context) => AdminPage(),
         QLTaiKhoanPage.routeName: (context) => QLTaiKhoanPage(),
+        QLDonHangPage.routeName: (context) => QLDonHangPage(),
         QLNhaHangPage.routeName: (context) => QLNhaHangPage(),
         QLMonAnPage.routeName: (context) => QLMonAnPage(),
+        LanguagePage.routeName: (context) => LanguagePage(),
       },
     );
   }

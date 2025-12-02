@@ -25,7 +25,7 @@ class _ChatbotAIPageState extends State<ChatbotAIPage> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-  final String _apiKey = 'AIzaSyB0Oi4ufdzPmu2bOp5wlOAc9I_5Nh3V_-A';
+  final String _apiKey = 'AIzaSyBg_frsvNCOmPnZB1nMLty6Z22uH539dtM';
   late final GenerativeModel _model;
 
   bool _isLoading = false;

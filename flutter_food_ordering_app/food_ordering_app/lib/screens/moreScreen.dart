@@ -2,16 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:food_ordering_app/const/colors.dart';
 import 'package:food_ordering_app/screens/aboutScreen.dart';
 import 'package:food_ordering_app/screens/inboxScreen.dart';
-import 'package:food_ordering_app/screens/myOrderScreen.dart';
+import 'package:food_ordering_app/pages/DonHang/donhang_page.dart';
 import 'package:food_ordering_app/screens/notificationScreen.dart';
 import 'package:food_ordering_app/screens/paymentScreen.dart';
 import 'package:food_ordering_app/utils/helper.dart';
 import 'package:food_ordering_app/widgets/customNavBar.dart';
+import 'package:food_ordering_app/services/notification_service.dart';
 
-class MoreScreen extends StatelessWidget {
+class MoreScreen extends StatefulWidget {
   static const routeName = "/moreScreen";
 
   const MoreScreen({super.key});
+
+  @override
+  State<MoreScreen> createState() => _MoreScreenState();
+}
+
+class _MoreScreenState extends State<MoreScreen> {
+  final NotificationService _notificationService = NotificationService.instance;
+  int _unreadCount = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUnreadCount();
+  }
+
+  Future<void> _loadUnreadCount() async {
+    await _notificationService.init();
+    setState(() {
+      _unreadCount = _notificationService.getUnreadCount();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +77,7 @@ class MoreScreen extends StatelessWidget {
                       ),
                       name: "Đơn hàng của tôi",
                       handler: () {
-                        Navigator.of(
-                          context,
-                        ).pushNamed(MyOrderScreen.routeName);
+                        Navigator.of(context).pushNamed(DonHangPage.routeName);
                       },
                     ),
                     const SizedBox(height: 10),
@@ -67,10 +87,13 @@ class MoreScreen extends StatelessWidget {
                       ),
                       name: "Thông báo",
                       isNoti: true,
-                      handler: () {
-                        Navigator.of(
+                      unreadCount: _unreadCount,
+                      handler: () async {
+                        await Navigator.of(
                           context,
                         ).pushNamed(NotificationScreen.routeName);
+                        // Cập nhật lại số thông báo chưa đọc sau khi quay lại
+                        _loadUnreadCount();
                       },
                     ),
                     const SizedBox(height: 10),
@@ -117,15 +140,18 @@ class MoreCard extends StatelessWidget {
     required String name,
     required Image image,
     bool isNoti = false,
+    int unreadCount = 0,
     required VoidCallback handler,
   }) : _name = name,
        _image = image,
        _isNoti = isNoti,
+       _unreadCount = unreadCount,
        _handler = handler;
 
   final String _name;
   final Image _image;
   final bool _isNoti;
+  final int _unreadCount;
   final VoidCallback _handler;
 
   @override
@@ -180,7 +206,7 @@ class MoreCard extends StatelessWidget {
                 ),
               ),
             ),
-            if (_isNoti)
+            if (_isNoti && _unreadCount > 0)
               Align(
                 alignment: Alignment.centerRight,
                 child: Container(
@@ -191,10 +217,14 @@ class MoreCard extends StatelessWidget {
                     shape: CircleBorder(),
                     color: Colors.red,
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "15",
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                      _unreadCount > 99 ? '99+' : _unreadCount.toString(),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),

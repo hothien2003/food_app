@@ -2,83 +2,139 @@ import 'package:flutter/material.dart';
 import 'package:food_ordering_app/const/colors.dart';
 import 'package:food_ordering_app/utils/helper.dart';
 import 'package:food_ordering_app/widgets/customNavBar.dart';
+import 'package:food_ordering_app/api/api_tinnhan.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class InboxScreen extends StatelessWidget {
+class InboxScreen extends StatefulWidget {
   static const routeName = "/inboxScreen";
 
   const InboxScreen({super.key});
+
+  @override
+  State<InboxScreen> createState() => _InboxScreenState();
+}
+
+class _InboxScreenState extends State<InboxScreen> {
+  final ApiTinNhan _apiTinNhan = ApiTinNhan();
+  List<TinNhan> _messages = [];
+  bool _isLoading = true;
+  int? _maNguoiDung;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMessages();
+  }
+
+  Future<void> _loadMessages() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    final prefs = await SharedPreferences.getInstance();
+    _maNguoiDung = prefs.getInt('maNguoiDung');
+
+    List<TinNhan> messages;
+    if (_maNguoiDung != null) {
+      messages = await _apiTinNhan.getTinNhanByUserId(_maNguoiDung!);
+    } else {
+      messages = await _apiTinNhan.getPublicMessages();
+    }
+
+    setState(() {
+      _messages = messages;
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _markAsRead(int maTinNhan) async {
+    await _apiTinNhan.markAsRead(maTinNhan);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
         children: [
           SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.only(bottom: 100),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          icon: Icon(Icons.arrow_back_ios_rounded),
-                        ),
-                        Expanded(
-                          child: Text(
-                            "Hộp thư",
-                            style: Helper.getTheme(context).headlineMedium,
+            child:
+                _isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : SingleChildScrollView(
+                      padding: const EdgeInsets.only(bottom: 100),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0,
+                            ),
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  icon: Icon(Icons.arrow_back_ios_rounded),
+                                ),
+                                Expanded(
+                                  child: Text(
+                                    "Hộp thư",
+                                    style:
+                                        Helper.getTheme(context).headlineMedium,
+                                  ),
+                                ),
+                                Image.asset(
+                                  Helper.getAssetName("cart.png", "virtual"),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                        Image.asset(Helper.getAssetName("cart.png", "virtual")),
-                      ],
+                          SizedBox(height: 30),
+                          if (_messages.isEmpty)
+                            Padding(
+                              padding: const EdgeInsets.all(40.0),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.mail_outline,
+                                    size: 80,
+                                    color: AppColor.placeholder,
+                                  ),
+                                  SizedBox(height: 20),
+                                  Text(
+                                    'Chưa có tin nhắn',
+                                    style: TextStyle(
+                                      color: AppColor.placeholder,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          else
+                            ..._messages.map((message) {
+                              return GestureDetector(
+                                onTap: () {
+                                  if (!message.daDoc &&
+                                      message.maTinNhan != null) {
+                                    _markAsRead(message.maTinNhan!);
+                                  }
+                                },
+                                child: MailCard(
+                                  title: message.tieuDe,
+                                  description: message.noiDung,
+                                  time: message.getFormattedDate(),
+                                  color:
+                                      message.daDoc
+                                          ? AppColor.placeholderBg
+                                          : Colors.white,
+                                  isUnread: !message.daDoc,
+                                ),
+                              );
+                            }),
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 30),
-                  MailCard(
-                    title: "Ưu đãi Thienmeal",
-                    description:
-                        "Nhận ngay mã giảm 30% cho đơn hàng đầu tiên trong tuần này.",
-                    time: "6 Tháng 7",
-                  ),
-                  MailCard(
-                    title: "Ưu đãi Thienmeal",
-                    description:
-                        "Freeship cho đơn từ 200.000 đ tại mọi quận nội thành.",
-                    time: "6 Tháng 7",
-                    color: AppColor.placeholderBg,
-                  ),
-                  MailCard(
-                    title: "Ưu đãi Thienmeal",
-                    description:
-                        "Nhà hàng mới vừa mở bán, đặt bàn ngay để nhận quà tặng.",
-                    time: "6 Tháng 7",
-                  ),
-                  MailCard(
-                    title: "Ưu đãi Thienmeal",
-                    description:
-                        "Tích lũy thêm 50 điểm thưởng khi thanh toán qua ví điện tử.",
-                    time: "6 Tháng 7",
-                    color: AppColor.placeholderBg,
-                  ),
-                  MailCard(
-                    title: "Ưu đãi Thienmeal",
-                    description:
-                        "Combo trưa chỉ 69.000 đ áp dụng trong khung giờ 11h-14h.",
-                    time: "6 Tháng 7",
-                  ),
-                  MailCard(
-                    title: "Ưu đãi Thienmeal",
-                    description:
-                        "Giới thiệu bạn bè để nhận thêm 2 mã giảm giá độc quyền.",
-                    time: "6 Tháng 7",
-                  ),
-                ],
-              ),
-            ),
           ),
           Positioned(
             bottom: 0,
@@ -99,15 +155,18 @@ class MailCard extends StatelessWidget {
     required String title,
     required String description,
     Color color = Colors.white,
+    bool isUnread = false,
   }) : _time = time,
        _title = title,
        _description = description,
-       _color = color;
+       _color = color,
+       _isUnread = isUnread;
 
   final String _time;
   final String _title;
   final String _description;
   final Color _color;
+  final bool _isUnread;
 
   @override
   Widget build(BuildContext context) {
@@ -124,13 +183,22 @@ class MailCard extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(backgroundColor: AppColor.orange, radius: 5),
+          CircleAvatar(
+            backgroundColor: _isUnread ? AppColor.orange : AppColor.placeholder,
+            radius: 5,
+          ),
           SizedBox(width: 20),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(_title, style: TextStyle(color: AppColor.primary)),
+                Text(
+                  _title,
+                  style: TextStyle(
+                    color: AppColor.primary,
+                    fontWeight: _isUnread ? FontWeight.bold : FontWeight.normal,
+                  ),
+                ),
                 SizedBox(height: 5),
                 Text(_description),
               ],

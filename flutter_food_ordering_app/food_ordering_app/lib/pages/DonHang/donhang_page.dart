@@ -164,22 +164,24 @@ class _DonHangPageState extends State<DonHangPage>
           ],
         ),
       ),
-      body:
-          isLoading
-              ? const Center(
-                child: CircularProgressIndicator(color: AppColor.orange),
-              )
-              : TabBarView(
-                controller: _tabController,
-                children: [
-                  // Tab cho "Đang xử lý"
-                  _buildOrderList(donHangList),
-                  // Tab cho "Hoàn thành"
-                  _buildOrderList(donHangList),
-                  // Tab cho "Đã hủy"
-                  _buildOrderList(donHangList),
-                ],
-              ),
+      body: SafeArea(
+        child:
+            isLoading
+                ? const Center(
+                  child: CircularProgressIndicator(color: AppColor.orange),
+                )
+                : TabBarView(
+                  controller: _tabController,
+                  children: [
+                    // Tab cho "Đang xử lý"
+                    _buildOrderList(donHangList),
+                    // Tab cho "Hoàn thành"
+                    _buildOrderList(donHangList),
+                    // Tab cho "Đã hủy"
+                    _buildOrderList(donHangList),
+                  ],
+                ),
+      ),
     );
   }
 

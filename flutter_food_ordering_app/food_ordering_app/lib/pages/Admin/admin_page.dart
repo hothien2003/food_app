@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:food_ordering_app/const/colors.dart';
+import 'package:food_ordering_app/pages/Admin/QL_DonHang/ql_don_hang_page.dart';
 import 'package:food_ordering_app/pages/Admin/QL_MonAn/ql_mon_an_page.dart';
 import 'package:food_ordering_app/pages/Admin/QL_NhaHang/ql_nha_hang_page.dart';
 import 'package:food_ordering_app/pages/Admin/QL_TaiKhoan/ql_tai_khoan_page.dart';
 import 'package:food_ordering_app/screens/aboutScreen.dart';
-import 'package:food_ordering_app/screens/myOrderScreen.dart';
 import 'package:food_ordering_app/utils/helper.dart';
+import 'package:food_ordering_app/pages/Login_Signup/login.dart';
 
 class AdminPage extends StatelessWidget {
   static const routeName = "/AdminPage";
@@ -56,7 +57,7 @@ class AdminPage extends StatelessWidget {
                       handler: () {
                         Navigator.of(
                           context,
-                        ).pushNamed(MyOrderScreen.routeName);
+                        ).pushNamed(QLDonHangPage.routeName);
                       },
                     ),
                     const SizedBox(height: 10),
@@ -87,12 +88,82 @@ class AdminPage extends StatelessWidget {
                       image: Image.asset(
                         Helper.getAssetName("info.png", "virtual"),
                       ),
-                      name: "",
+                      name: "Thông tin",
                       handler: () {
                         Navigator.of(context).pushNamed(AboutScreen.routeName);
                       },
                     ),
                     const SizedBox(height: 10),
+                    // Nút đăng xuất
+                    GestureDetector(
+                      onTap: () {
+                        _showLogoutDialog(context);
+                      },
+                      child: SizedBox(
+                        height: 70,
+                        width: double.infinity,
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: double.infinity,
+                              width: double.infinity,
+                              margin: const EdgeInsets.only(right: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0,
+                              ),
+                              decoration: ShapeDecoration(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                color: Colors.red.shade50,
+                              ),
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 50,
+                                    height: 50,
+                                    decoration: ShapeDecoration(
+                                      shape: const CircleBorder(),
+                                      color: Colors.red.shade100,
+                                    ),
+                                    child: const Icon(
+                                      Icons.logout,
+                                      color: Colors.red,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  const Text(
+                                    "Đăng xuất",
+                                    style: TextStyle(
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Container(
+                                height: 30,
+                                width: 30,
+                                decoration: ShapeDecoration(
+                                  shape: const CircleBorder(),
+                                  color: Colors.red.shade50,
+                                ),
+                                child: const Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Colors.red,
+                                  size: 17,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -100,6 +171,36 @@ class AdminPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Xác nhận đăng xuất'),
+          content: const Text('Bạn có chắc chắn muốn đăng xuất?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text('Hủy'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                Navigator.of(
+                  context,
+                ).pushNamedAndRemoveUntil(Login.routeName, (route) => false);
+              },
+              style: TextButton.styleFrom(foregroundColor: Colors.red),
+              child: const Text('Đăng xuất'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -30,6 +30,8 @@ public partial class FoodOrderDBContext : DbContext
     public virtual DbSet<ThanhToan> ThanhToans { get; set; }
     public virtual DbSet<GioHang> GioHangs { get; set; }
     public virtual DbSet<ChatHistory> ChatHistories { get; set; }
+    public virtual DbSet<TheTinDung> TheTinDungs { get; set; }
+    public virtual DbSet<TinNhan> TinNhans { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Name=ConnectionStrings:Connection");
@@ -220,6 +222,82 @@ public partial class FoodOrderDBContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ChatHistory_NguoiDung");
+        });
+
+        modelBuilder.Entity<TheTinDung>(entity =>
+        {
+            entity.HasKey(e => e.MaThe).HasName("PK__TheTinDung");
+
+            entity.ToTable("TheTinDung");
+
+            entity.Property(e => e.SoThe)
+                .HasMaxLength(20)
+                .IsRequired();
+
+            entity.Property(e => e.TenChuThe)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(e => e.ThangHetHan)
+                .HasMaxLength(2)
+                .IsRequired();
+
+            entity.Property(e => e.NamHetHan)
+                .HasMaxLength(2)
+                .IsRequired();
+
+            entity.Property(e => e.MaBaoMat)
+                .HasMaxLength(4)
+                .IsRequired();
+
+            entity.Property(e => e.LoaiThe)
+                .HasMaxLength(20)
+                .HasDefaultValue("visa");
+
+            entity.Property(e => e.ChoPhepXoa)
+                .HasDefaultValue(true);
+
+            entity.Property(e => e.NgayThem)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.MaNguoiDungNavigation)
+                .WithMany()
+                .HasForeignKey(d => d.MaNguoiDung)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_TheTinDung_NguoiDung");
+        });
+
+        modelBuilder.Entity<TinNhan>(entity =>
+        {
+            entity.HasKey(e => e.MaTinNhan).HasName("PK__TinNhan");
+
+            entity.ToTable("TinNhan");
+
+            entity.Property(e => e.TieuDe)
+                .HasMaxLength(200)
+                .IsRequired();
+
+            entity.Property(e => e.NoiDung)
+                .HasMaxLength(1000)
+                .IsRequired();
+
+            entity.Property(e => e.NgayGui)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.Property(e => e.DaDoc)
+                .HasDefaultValue(false);
+
+            entity.Property(e => e.LoaiTinNhan)
+                .HasMaxLength(50)
+                .HasDefaultValue("promotion");
+
+            entity.HasOne(d => d.MaNguoiDungNavigation)
+                .WithMany()
+                .HasForeignKey(d => d.MaNguoiDung)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_TinNhan_NguoiDung");
         });
 
         OnModelCreatingPartial(modelBuilder);

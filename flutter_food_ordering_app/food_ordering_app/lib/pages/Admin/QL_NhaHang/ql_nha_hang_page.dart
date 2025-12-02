@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:food_ordering_app/api/api_nhahang.dart';
 import 'package:food_ordering_app/models/NhaHang.dart';
 import 'package:food_ordering_app/pages/Admin/QL_NhaHang/update_nhahang_page.dart';
+import 'package:food_ordering_app/pages/Admin/QL_NhaHang/add_nhahang_page.dart';
 import 'package:food_ordering_app/utils/helper.dart';
 import 'package:food_ordering_app/const/colors.dart';
 import 'package:food_ordering_app/widgets/searchBar.dart' as Custom;
@@ -82,6 +83,26 @@ class _QLNhaHangPageState extends State<QLNhaHangPage> {
                             "Danh sách nhà hàng",
                             style: Helper.getTheme(context).headlineMedium,
                           ),
+                        ),
+                        // Nút thêm nhà hàng mới
+                        IconButton(
+                          onPressed: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const AddNhaHangPage(),
+                              ),
+                            );
+                            if (result == true) {
+                              getData();
+                            }
+                          },
+                          icon: const Icon(
+                            Icons.add_circle,
+                            color: AppColor.orange,
+                            size: 32,
+                          ),
+                          tooltip: 'Thêm nhà hàng mới',
                         ),
                       ],
                     ),
