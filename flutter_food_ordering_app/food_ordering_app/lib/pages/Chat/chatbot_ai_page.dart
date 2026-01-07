@@ -25,7 +25,7 @@ class _ChatbotAIPageState extends State<ChatbotAIPage> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-  final String _apiKey = 'AIzaSyBg_frsvNCOmPnZB1nMLty6Z22uH539dtM';
+  final String _apiKey = 'AIzaSyCT2JFWIO2UF5NkfCfuCctizt4wb6Wl6M8';
   late final GenerativeModel _model;
 
   bool _isLoading = false;
@@ -33,7 +33,7 @@ class _ChatbotAIPageState extends State<ChatbotAIPage> {
   final List<ChatMessage> _messages = [];
   bool _isDataLoaded = false;
   Uint8List? _csvData;
-  
+
   // State cho đặt món
   PendingOrder? _pendingOrder;
   final ApiGioHang _apiGioHang = ApiGioHang();
@@ -44,34 +44,47 @@ class _ChatbotAIPageState extends State<ChatbotAIPage> {
   @override
   void initState() {
     super.initState();
-    _model = GenerativeModel(model: 'gemini-2.0-flash', apiKey: _apiKey);
+    _model = GenerativeModel(model: 'gemini-2.0-flash-latest', apiKey: _apiKey);
 
     // tin nhắn chào mừng
     _messages.add(
       ChatMessage(
         message:
-            'Xin chào! Tôi là trợ lý AI của ứng dụng đặt đồ ăn. Tôi có thể giúp bạn:\n\n',
+            '👋 Xin chào! Tôi là AI Assistant của Food Ordering App!\n\n'
+            '🎯 Tôi có thể giúp bạn:\n\n'
+            '🍕 Xem menu & tư vấn món ăn\n'
+            '🛒 Đặt món và quản lý giỏ hàng\n'
+            '💰 Thông tin giá, khuyến mãi\n'
+            '🚚 Hỗ trợ giao hàng & thanh toán\n\n'
+            '💬 Hãy hỏi tôi bất cứ điều gì!\n'
+            'Ví dụ: "Có món gì ngon?", "Đặt 2 pizza", "Xem giỏ hàng"',
         isUser: false,
         timestamp: DateTime.now(),
       ),
     );
-    _loadCSVData();
     _loadMonAnList();
     _loadGioHangList();
+
+    // Đánh dấu đã tải dữ liệu (không còn cần CSV)
+    setState(() {
+      _isDataLoaded = true;
+    });
   }
-  
+
   // Load danh sách món ăn
   Future<void> _loadMonAnList() async {
     try {
+      print('📡 Đang gọi API để tải danh sách món ăn...');
       final list = await _apiMonAn.getMonAnData();
       setState(() {
         _monAnList = list;
       });
+      print('✅ Đã tải ${list?.length ?? 0} món ăn từ API');
     } catch (e) {
-      print('Lỗi khi tải danh sách món ăn: $e');
+      print('❌ Lỗi khi tải danh sách món ăn: $e');
     }
   }
-  
+
   // Load danh sách giỏ hàng
   Future<void> _loadGioHangList() async {
     try {
@@ -99,144 +112,381 @@ class _ChatbotAIPageState extends State<ChatbotAIPage> {
   // Cung cấp dữ liệu CSV cho AI
   Future<void> _loadCSVData() async {
     try {
-      final response = await http.get(
-        Uri.parse('$_baseUrl/api/MonAn/GetCSVData'),
-      );
+      print('Đang tải dữ liệu CSV từ: $_baseUrl/api/MonAn/GetCSVData');
+
+      final response = await http
+          .get(Uri.parse('$_baseUrl/api/MonAn/GetCSVData'))
+          .timeout(Duration(seconds: 10));
 
       if (response.statusCode == 200) {
         setState(() {
           _csvData = response.bodyBytes;
           _isDataLoaded = true;
         });
-        print('Đã tải dữ liệu CSV thành công');
+        print(
+          'Đã tải dữ liệu CSV thành công (${response.bodyBytes.length} bytes)',
+        );
       } else {
         print('Không thể tải file CSV: ${response.statusCode}');
+        print('Response body: ${response.body}');
+        setState(() {
+          _isDataLoaded = false;
+        });
       }
     } catch (e) {
       print('Lỗi khi tải dữ liệu CSV: $e');
+      setState(() {
+        _isDataLoaded = false;
+      });
     }
   }
 
-  // Gửi câu hỏi đến Gemini với dữ liệu CSV
+  // Gửi câu hỏi đến Gemini với dữ liệu món ăn
   Future<String> _processCSVQuestion(String userMessage) async {
+    print('🎯 _processCSVQuestion được gọi với: "$userMessage"');
     try {
-      if (_csvData == null) {
-        return 'Đang tải dữ liệu món ăn. Vui lòng thử lại sau.';
+      // Kiểm tra dữ liệu món ăn
+      print('🔍 Kiểm tra _monAnList: ${_monAnList?.length ?? 0} món');
+      if (_monAnList == null || _monAnList!.isEmpty) {
+        print('⚠️ Danh sách món ăn trống, đang tải...');
+        await _loadMonAnList();
+        if (_monAnList == null || _monAnList!.isEmpty) {
+          print('❌ Không thể tải dữ liệu món ăn!');
+          return 'Không thể tải dữ liệu món ăn. Vui lòng thử lại sau.';
+        }
+        print('✅ Đã tải ${_monAnList!.length} món ăn');
       }
 
-      // Tạo danh sách món ăn dạng text cho AI
-      String monAnListText = '';
-      if (_monAnList != null && _monAnList!.isNotEmpty) {
-        monAnListText = '\n\nDanh sách món ăn hiện có:\n';
-        for (var monAn in _monAnList!.take(50)) { // Giới hạn 50 món để không quá dài
-          monAnListText += '- ${monAn.maMonAn}: ${monAn.tenMonAn} (${monAn.gia.toStringAsFixed(0)} VNĐ)\n';
-        }
+      // Tạo danh sách món ăn dạng text cho AI (giới hạn 30 món)
+      String monAnListText = 'Món ăn:\n';
+      for (var monAn in _monAnList!.take(30)) {
+        monAnListText +=
+            '${monAn.maMonAn}: ${monAn.tenMonAn} (${monAn.gia.toStringAsFixed(0)}đ)\n';
       }
-      
+      print('📋 Danh sách món ăn gửi cho AI:\n$monAnListText');
+
       // Tạo danh sách giỏ hàng hiện tại
       String gioHangText = '';
       if (_gioHangList != null && _gioHangList!.isNotEmpty) {
-        gioHangText = '\n\nGiỏ hàng hiện tại của bạn (Mã món - Tên món - Số lượng):\n';
+        gioHangText = '\nGiỏ hàng:\n';
         for (var item in _gioHangList!) {
           final monAn = _monAnList?.firstWhere(
             (m) => m.maMonAn == item.maMonAn,
-            orElse: () => MonAn(
-              maMonAn: item.maMonAn,
-              maNhaHang: 0,
-              tenMonAn: 'Món ăn #${item.maMonAn}',
-              gia: 0,
-            ),
-          ) ?? MonAn(
-            maMonAn: item.maMonAn,
-            maNhaHang: 0,
-            tenMonAn: 'Món ăn #${item.maMonAn}',
-            gia: 0,
+            orElse:
+                () => MonAn(
+                  maMonAn: item.maMonAn,
+                  maNhaHang: 0,
+                  tenMonAn: 'Món #${item.maMonAn}',
+                  gia: 0,
+                ),
           );
-          gioHangText += '- Mã ${item.maMonAn}: ${monAn.tenMonAn} - ${item.soLuong} phần\n';
+          gioHangText +=
+              '${item.maMonAn}: ${monAn?.tenMonAn ?? "Món"} x${item.soLuong}\n';
         }
       }
 
+      // Gửi request đến Gemini với prompt đơn giản hơn
       final content = [
-        Content.multi([
-          DataPart('text/csv', _csvData!),
-          TextPart('''
-Bạn là trợ lý AI của ứng dụng đặt đồ ăn. Dựa trên dữ liệu món ăn trong file CSV, hãy trả lời câu hỏi sau:
+        Content.text('''
+Bạn là trợ lý AI của ứng dụng đặt món ăn. Hãy trả lời thân thiện, ngắn gọn.
 
-"$userMessage"
+QUAN TRỌNG: Khách có thể gõ tiếng Việt không dấu (VD: "dat pizza", "co mon gi") - bạn phải hiểu!
+
+DANH SÁCH MÓN ĂN:
 $monAnListText
-$gioHangText
 
-QUAN TRỌNG - Xử lý yêu cầu đặt món:
-1. Nếu người dùng muốn đặt món (ví dụ: "tôi muốn đặt pizza", "cho tôi 2 phần phở", "thêm bánh mì vào giỏ hàng"):
-   - Tìm món ăn phù hợp trong danh sách món ăn (so khớp tên món)
-   - Nếu tìm thấy và người dùng đã nói số lượng: thêm luôn vào giỏ hàng
-   - Nếu tìm thấy nhưng chưa có số lượng: hỏi "Bạn muốn đặt bao nhiêu phần [TÊN MÓN]?"
-   - Trong response, thêm dòng đặc biệt: "ACTION:ADD_TO_CART|MA_MON_AN:[số mã món từ danh sách]|TEN_MON:[tên món chính xác]"
-   - Nếu người dùng đã nói số lượng, thêm: "ACTION:CONFIRM_ORDER|MA_MON_AN:[số]|SO_LUONG:[số lượng]"
-   
-2. Nếu người dùng trả lời số lượng (ví dụ: "2 phần", "3", "một phần") và có pending order:
-   - Thêm vào giỏ hàng và trả lời: "Đã thêm [số lượng] phần [tên món] vào giỏ hàng của bạn!"
-   - Trong response, thêm: "ACTION:CONFIRM_ORDER|MA_MON_AN:[số]|SO_LUONG:[số]"
-   
-3. Nếu người dùng muốn thay đổi số lượng món trong giỏ hàng (ví dụ: "đổi pizza thành 5 phần", "tăng phở lên 3 phần", "giảm bánh mì xuống 2 phần"):
-   - Tìm món ăn trong giỏ hàng hiện tại
-   - Trả lời: "Đã cập nhật số lượng [tên món] thành [số lượng] phần!"
-   - Trong response, thêm: "ACTION:UPDATE_CART|MA_MON_AN:[số mã món từ giỏ hàng]|SO_LUONG:[số lượng mới]"
+GIỎ HÀNG HIỆN TẠI:
+${gioHangText.isEmpty ? "Giỏ hàng trống" : gioHangText}
 
-4. Nếu người dùng muốn xóa món khỏi giỏ hàng (ví dụ: "xóa pizza", "bỏ thịt heo", "xóa món thịt bò", "xóa cho tôi thịt heo"):
-   - Tìm món ăn trong giỏ hàng hiện tại (so khớp tên món với danh sách giỏ hàng ở trên)
-   - Lấy MÃ MÓN (maMonAn) từ giỏ hàng hiện tại, KHÔNG phải từ danh sách món ăn
-   - Trả lời: "Đã xóa [tên món] khỏi giỏ hàng của bạn!"
-   - Trong response, thêm: "ACTION:REMOVE_FROM_CART|MA_MON_AN:[số mã món từ giỏ hàng hiện tại]"
-   - QUAN TRỌNG: 
-     * Chỉ xóa khi tìm thấy món trong giỏ hàng hiện tại
-     * Phải sử dụng MÃ MÓN từ giỏ hàng (ví dụ: nếu giỏ hàng có "Mã 5: thịt heo", thì dùng mã 5)
-     * Nếu không tìm thấy thì trả lời: "Không tìm thấy [tên món] trong giỏ hàng của bạn."
+GIỎ HÀNG HIỆN TẠI:
+${gioHangText.isEmpty ? "Giỏ hàng trống" : gioHangText}
 
-5. Nếu người dùng chỉ hỏi thông tin, trả lời bình thường không có ACTION.
+CÂU HỎI: "$userMessage"
 
-Lưu ý:
-- Giá tiền: hiển thị theo đơn vị VNĐ.
-- Ngày tháng: hiển thị theo định dạng dd/mm/yyyy.
-- Trả lời thân thiện, ngắn gọn, rõ ràng.
-- Chỉ thêm ACTION khi thực sự cần xử lý giỏ hàng.
+HƯỚNG DẪN TRẢ LỜI:
+
+1. Chào hỏi ("xin chao", "hi") → Chào + giới thiệu có thể giúp gì
+2. Hỏi món ("co mon gi", "có món gì") → Liệt kê 5-8 món với giá, emoji 🍕🍜🍔
+3. Đặt món ("dat pizza", "cho 2 pho") → 
+   - Nếu có số lượng: "Đã thêm X [món] vào giỏ! Giá: Y đ 🛒\nACTION:CONFIRM_ORDER|MA_MON_AN:[mã]|SO_LUONG:[số]"
+   - Nếu chưa có số lượng: "Bạn muốn bao nhiêu phần [món]? (Giá: X đ)"
+4. Xóa món ("xoa pizza", "bo pho") → "Đã xóa [món] khỏi giỏ! ✅\nACTION:REMOVE_FROM_CART|MA_MON_AN:[mã]"
+5. Xem giỏ ("gio hang", "giỏ hàng") → Liệt kê món + tổng tiền
+6. Hỏi giá → Trả lời giá chính xác từ danh sách
+7. Thanh toán/giao hàng → "Hỗ trợ: COD, MoMo, ZaloPay, QR. Ship 30-45 phút, miễn phí >100k"
+
+LƯU Ý:
+- Hiểu cả có dấu và không dấu (pizza = pizza, pho = phở)
+- Dùng emoji cho thân thiện
+- ACTION: ở dòng riêng, không giải thích
+- Nếu không tìm thấy món → gợi ý món tương tự
+
+TRẢ LỜI NGAY:
 '''),
-        ]),
       ];
 
-      final result = await _model.generateContent(content); 
-      final responseText = result.text ??
-          'Xin lỗi, tôi không thể trả lời câu hỏi vào lúc này.';
-      
+      // Retry logic
+      GenerateContentResponse? result;
+      int retries = 0;
+      const maxRetries = 2;
+
+      while (retries <= maxRetries) {
+        try {
+          print(
+            '🔄 Đang gọi Gemini API... (Lần thử ${retries + 1}/${maxRetries + 1})',
+          );
+          result = await _model
+              .generateContent(content)
+              .timeout(Duration(seconds: 15));
+          print('✅ Gemini API trả về thành công!');
+          break;
+        } catch (e) {
+          retries++;
+          print('❌ Lỗi Gemini (lần $retries): $e');
+          if (retries > maxRetries) {
+            print('⛔ Đã thử $maxRetries lần, chuyển sang fallback');
+            rethrow;
+          }
+          await Future.delayed(Duration(seconds: 2 * retries));
+        }
+      }
+
+      if (result == null) {
+        print('❌ Gemini không trả về kết quả');
+        return _smartFallbackResponse(userMessage);
+      }
+
+      final responseText =
+          result.text ?? 'Xin lỗi, tôi không thể trả lời câu hỏi vào lúc này.';
+
+      print(
+        '✅ AI trả lời: ${responseText.substring(0, responseText.length > 100 ? 100 : responseText.length)}...',
+      );
+
       // Xử lý action từ AI response
       await _handleAIResponse(responseText, userMessage);
-      
+
       // Trả về response không có ACTION tag
-      return responseText.split('\n')
+      return responseText
+          .split('\n')
           .where((line) => !line.startsWith('ACTION:'))
           .join('\n');
     } catch (e) {
-      print('Lỗi khi xử lý câu hỏi với CSV: $e');
-      return 'Đã xảy ra lỗi khi xử lý yêu cầu của bạn. Vui lòng thử lại sau.';
+      print('❌❌❌ LỖI NGHIÊM TRỌNG: $e');
+      print('📍 Chi tiết lỗi: ${e.toString()}');
+      // Fallback khi API lỗi
+      return _smartFallbackResponse(userMessage);
     }
   }
-  
+
+  // Smart fallback response với logic thông minh
+  Future<String> _smartFallbackResponse(String userMessage) async {
+    final lowerMsg = userMessage.toLowerCase();
+
+    // Load dữ liệu nếu chưa có
+    if (_monAnList == null || _monAnList!.isEmpty) {
+      await _loadMonAnList();
+    }
+
+    // 1. Xử lý câu chào
+    if (lowerMsg.contains('xin chào') ||
+        lowerMsg.contains('chào') ||
+        lowerMsg.contains('hi') ||
+        lowerMsg.contains('hello')) {
+      return 'Xin chào! Tôi có thể giúp bạn:\n• Xem danh sách món ăn\n• Đặt món vào giỏ hàng\n• Kiểm tra giỏ hàng\n\nBạn muốn làm gì?';
+    }
+
+    // 2. Xử lý xem danh sách món
+    if (lowerMsg.contains('món') &&
+        (lowerMsg.contains('có') ||
+            lowerMsg.contains('gì') ||
+            lowerMsg.contains('nào') ||
+            lowerMsg.contains('danh sách'))) {
+      if (_monAnList != null && _monAnList!.isNotEmpty) {
+        String response =
+            '📋 Danh sách món ăn (${_monAnList!.length} món):\n\n';
+        int count = _monAnList!.length > 10 ? 10 : _monAnList!.length;
+        for (var i = 0; i < count; i++) {
+          response +=
+              '${i + 1}. ${_monAnList![i].tenMonAn} - ${_monAnList![i].gia.toStringAsFixed(0)}đ\n';
+        }
+        if (_monAnList!.length > 10) {
+          response += '\n...và ${_monAnList!.length - 10} món khác';
+        }
+        return response;
+      }
+    }
+
+    // 3. Xử lý xem giỏ hàng
+    if (lowerMsg.contains('giỏ') ||
+        lowerMsg.contains('gio') ||
+        lowerMsg.contains('đã đặt')) {
+      if (_gioHangList != null && _gioHangList!.isNotEmpty) {
+        String response = '🛒 Giỏ hàng của bạn:\n\n';
+        double total = 0;
+        for (var item in _gioHangList!) {
+          final monAn = _monAnList?.firstWhere(
+            (m) => m.maMonAn == item.maMonAn,
+            orElse:
+                () => MonAn(
+                  maMonAn: item.maMonAn,
+                  maNhaHang: 0,
+                  tenMonAn: 'Món #${item.maMonAn}',
+                  gia: 0,
+                ),
+          );
+          double itemTotal = (monAn?.gia ?? 0) * item.soLuong;
+          total += itemTotal;
+          response +=
+              '• ${monAn?.tenMonAn ?? "Món"} x${item.soLuong} = ${itemTotal.toStringAsFixed(0)}đ\n';
+        }
+        response += '\n💰 Tổng cộng: ${total.toStringAsFixed(0)}đ';
+        return response;
+      } else {
+        return '🛒 Giỏ hàng của bạn đang trống.\n\nBạn muốn đặt món nào không?';
+      }
+    }
+
+    // 4. Xử lý đặt món (tìm món trong danh sách)
+    if (lowerMsg.contains('đặt') ||
+        lowerMsg.contains('thêm') ||
+        lowerMsg.contains('mua')) {
+      if (_monAnList != null && _monAnList!.isNotEmpty) {
+        // Tìm món ăn phù hợp
+        MonAn? foundMon;
+        for (var mon in _monAnList!) {
+          if (lowerMsg.contains(mon.tenMonAn.toLowerCase())) {
+            foundMon = mon;
+            break;
+          }
+        }
+
+        if (foundMon != null) {
+          // Tìm số lượng trong câu
+          int? soLuong = _extractQuantity(userMessage);
+          if (soLuong != null) {
+            // Có số lượng rồi, thêm luôn
+            await _addToCart(foundMon.maMonAn, soLuong);
+            return '✅ Đã thêm ${soLuong} phần ${foundMon.tenMonAn} vào giỏ hàng!\n\nTổng: ${(foundMon.gia * soLuong).toStringAsFixed(0)}đ';
+          } else {
+            // Hỏi số lượng
+            setState(() {
+              _pendingOrder = PendingOrder(
+                maMonAn: foundMon!.maMonAn,
+                tenMonAn: foundMon.tenMonAn,
+              );
+            });
+            return '🍽️ ${foundMon.tenMonAn} - ${foundMon.gia.toStringAsFixed(0)}đ\n\nBạn muốn đặt bao nhiêu phần?';
+          }
+        } else {
+          return 'Xin lỗi, tôi không tìm thấy món bạn yêu cầu. Bạn có thể xem danh sách món bằng cách hỏi "Có món gì?"';
+        }
+      }
+    }
+
+    // 5. Xử lý trả lời số lượng cho pending order
+    if (_pendingOrder != null) {
+      int? soLuong = _extractQuantity(userMessage);
+      if (soLuong != null) {
+        final monAn = _monAnList?.firstWhere(
+          (m) => m.maMonAn == _pendingOrder!.maMonAn,
+          orElse:
+              () => MonAn(
+                maMonAn: _pendingOrder!.maMonAn,
+                maNhaHang: 0,
+                tenMonAn: _pendingOrder!.tenMonAn,
+                gia: 0,
+              ),
+        );
+        await _addToCart(_pendingOrder!.maMonAn, soLuong);
+        final tenMon = _pendingOrder!.tenMonAn;
+        setState(() {
+          _pendingOrder = null;
+        });
+        return '✅ Đã thêm $soLuong phần $tenMon vào giỏ hàng!\n\nTổng: ${((monAn?.gia ?? 0) * soLuong).toStringAsFixed(0)}đ';
+      }
+    }
+
+    // Default response
+    return 'Tôi có thể giúp bạn:\n\n• "Có món gì?" - Xem danh sách món\n• "Đặt [tên món]" - Đặt món ăn\n• "Giỏ hàng" - Xem giỏ hàng\n\nBạn muốn làm gì?';
+  }
+
+  // Fallback response cũ (giữ lại backup)
+  String _fallbackResponse(String userMessage) {
+    final lowerMsg = userMessage.toLowerCase();
+
+    // Xử lý câu chào
+    if (lowerMsg.contains('xin chào') ||
+        lowerMsg.contains('chào') ||
+        lowerMsg.contains('hi') ||
+        lowerMsg.contains('hello')) {
+      return 'Xin chào! Tôi có thể giúp bạn tìm món ăn, thêm vào giỏ hàng. Bạn muốn gì?';
+    }
+
+    // Xử lý hỏi về món ăn
+    if (lowerMsg.contains('món') ||
+        lowerMsg.contains('ăn') ||
+        lowerMsg.contains('có gì')) {
+      if (_monAnList != null && _monAnList!.isNotEmpty) {
+        String response =
+            'Chúng tôi có ${_monAnList!.length} món ăn. Một số món:\n\n';
+        for (
+          var i = 0;
+          i < (_monAnList!.length > 5 ? 5 : _monAnList!.length);
+          i++
+        ) {
+          response +=
+              '• ${_monAnList![i].tenMonAn} - ${_monAnList![i].gia.toStringAsFixed(0)}đ\n';
+        }
+        return response;
+      }
+    }
+
+    // Xử lý giỏ hàng
+    if (lowerMsg.contains('giỏ') || lowerMsg.contains('gio')) {
+      if (_gioHangList != null && _gioHangList!.isNotEmpty) {
+        String response =
+            'Giỏ hàng của bạn có ${_gioHangList!.length} món:\n\n';
+        for (var item in _gioHangList!) {
+          final monAn = _monAnList?.firstWhere(
+            (m) => m.maMonAn == item.maMonAn,
+            orElse:
+                () => MonAn(
+                  maMonAn: item.maMonAn,
+                  maNhaHang: 0,
+                  tenMonAn: 'Món #${item.maMonAn}',
+                  gia: 0,
+                ),
+          );
+          response += '• ${monAn?.tenMonAn ?? "Món"} x${item.soLuong}\n';
+        }
+        return response;
+      } else {
+        return 'Giỏ hàng của bạn đang trống.';
+      }
+    }
+
+    return 'Xin lỗi, tôi đang gặp sự cố kỹ thuật tạm thời. Bạn có thể hỏi về:\n• Danh sách món ăn\n• Giỏ hàng của bạn\n• Đặt món ăn';
+  }
+
   // Xử lý response từ AI để thực hiện action
   Future<void> _handleAIResponse(String aiResponse, String userMessage) async {
     try {
       // Tìm ACTION trong response
-      final actionLines = aiResponse.split('\n')
-          .where((line) => line.startsWith('ACTION:'))
-          .toList();
-      
+      final actionLines =
+          aiResponse
+              .split('\n')
+              .where((line) => line.startsWith('ACTION:'))
+              .toList();
+
       for (var actionLine in actionLines) {
         final parts = actionLine.replaceFirst('ACTION:', '').split('|');
         final action = parts[0];
-        
+
         int? maMonAn;
         int? soLuong;
         String? tenMon;
-        
+
         for (var part in parts) {
           if (part.startsWith('MA_MON_AN:')) {
             maMonAn = int.tryParse(part.replaceFirst('MA_MON_AN:', ''));
@@ -246,42 +496,49 @@ Lưu ý:
             tenMon = part.replaceFirst('TEN_MON:', '');
           }
         }
-        
+
         if (action == 'ADD_TO_CART' && maMonAn != null) {
           // Tìm món ăn trong danh sách
-          final monAn = _monAnList?.firstWhere(
-            (m) => m.maMonAn == maMonAn,
-            orElse: () => MonAn(
-              maMonAn: maMonAn!,
-              maNhaHang: 0,
-              tenMonAn: tenMon ?? 'Món ăn',
-              gia: 0,
-            ),
-          ) ?? MonAn(
-            maMonAn: maMonAn,
-            maNhaHang: 0,
-            tenMonAn: tenMon ?? 'Món ăn',
-            gia: 0,
-          );
-          
+          final monAn =
+              _monAnList?.firstWhere(
+                (m) => m.maMonAn == maMonAn,
+                orElse:
+                    () => MonAn(
+                      maMonAn: maMonAn!,
+                      maNhaHang: 0,
+                      tenMonAn: tenMon ?? 'Món ăn',
+                      gia: 0,
+                    ),
+              ) ??
+              MonAn(
+                maMonAn: maMonAn,
+                maNhaHang: 0,
+                tenMonAn: tenMon ?? 'Món ăn',
+                gia: 0,
+              );
+
           setState(() {
             _pendingOrder = PendingOrder(
               maMonAn: maMonAn!,
               tenMonAn: monAn.tenMonAn,
             );
           });
-        } else if (action == 'CONFIRM_ORDER' && maMonAn != null && soLuong != null) {
+        } else if (action == 'CONFIRM_ORDER' &&
+            maMonAn != null &&
+            soLuong != null) {
           await _addToCart(maMonAn, soLuong);
           setState(() {
             _pendingOrder = null;
           });
-        } else if (action == 'UPDATE_CART' && maMonAn != null && soLuong != null) {
+        } else if (action == 'UPDATE_CART' &&
+            maMonAn != null &&
+            soLuong != null) {
           await _updateCart(maMonAn, soLuong);
         } else if (action == 'REMOVE_FROM_CART' && maMonAn != null) {
           await _removeFromCart(maMonAn);
         }
       }
-      
+
       // Nếu có pending order và user message có vẻ là số lượng
       if (_pendingOrder != null) {
         final soLuong = _extractQuantity(userMessage);
@@ -296,30 +553,38 @@ Lưu ý:
       print('Lỗi khi xử lý action: $e');
     }
   }
-  
+
   // Trích xuất số lượng từ message
   int? _extractQuantity(String message) {
     final numbers = RegExp(r'\d+').allMatches(message);
     if (numbers.isNotEmpty) {
       return int.tryParse(numbers.first.group(0)!);
     }
-    
+
     // Xử lý số bằng chữ
     final vietnameseNumbers = {
-      'một': 1, 'hai': 2, 'ba': 3, 'bốn': 4, 'năm': 5,
-      'sáu': 6, 'bảy': 7, 'tám': 8, 'chín': 9, 'mười': 10,
+      'một': 1,
+      'hai': 2,
+      'ba': 3,
+      'bốn': 4,
+      'năm': 5,
+      'sáu': 6,
+      'bảy': 7,
+      'tám': 8,
+      'chín': 9,
+      'mười': 10,
     };
-    
+
     final lowerMessage = message.toLowerCase();
     for (var entry in vietnameseNumbers.entries) {
       if (lowerMessage.contains(entry.key)) {
         return entry.value;
       }
     }
-    
+
     return null;
   }
-  
+
   // Thêm món vào giỏ hàng
   Future<void> _addToCart(int maMonAn, int soLuong) async {
     try {
@@ -328,25 +593,28 @@ Lưu ý:
         print('Người dùng chưa đăng nhập');
         return;
       }
-      
+
       // Kiểm tra xem món đã có trong giỏ hàng chưa
-      final existingItem = _gioHangList?.firstWhere(
-        (item) => item.maMonAn == maMonAn,
-        orElse: () => GioHang(
-          maGioHang: 0,
-          maNguoiDung: 0,
-          maMonAn: 0,
-          soLuong: 0,
-          ngayThem: DateTime.now(),
-        ),
-      ) ?? GioHang(
-        maGioHang: 0,
-        maNguoiDung: 0,
-        maMonAn: 0,
-        soLuong: 0,
-        ngayThem: DateTime.now(),
-      );
-      
+      final existingItem =
+          _gioHangList?.firstWhere(
+            (item) => item.maMonAn == maMonAn,
+            orElse:
+                () => GioHang(
+                  maGioHang: 0,
+                  maNguoiDung: 0,
+                  maMonAn: 0,
+                  soLuong: 0,
+                  ngayThem: DateTime.now(),
+                ),
+          ) ??
+          GioHang(
+            maGioHang: 0,
+            maNguoiDung: 0,
+            maMonAn: 0,
+            soLuong: 0,
+            ngayThem: DateTime.now(),
+          );
+
       if (existingItem.maGioHang > 0) {
         // Cập nhật số lượng
         final updatedGioHang = GioHang(
@@ -368,25 +636,25 @@ Lưu ý:
         );
         await _apiGioHang.createGioHang(newGioHang);
       }
-      
+
       // Reload giỏ hàng
       await _loadGioHangList();
     } catch (e) {
       print('Lỗi khi thêm vào giỏ hàng: $e');
     }
   }
-  
+
   // Cập nhật số lượng món trong giỏ hàng
   Future<void> _updateCart(int maMonAn, int soLuong) async {
     try {
       final existingItem = _gioHangList?.firstWhere(
         (item) => item.maMonAn == maMonAn,
       );
-      
+
       if (existingItem != null && existingItem.maGioHang > 0) {
         final maNguoiDung = await layMaNguoiDungDangNhap();
         if (maNguoiDung == null) return;
-        
+
         final updatedGioHang = GioHang(
           maGioHang: existingItem.maGioHang,
           maNguoiDung: maNguoiDung,
@@ -395,7 +663,7 @@ Lưu ý:
           ngayThem: existingItem.ngayThem,
         );
         await _apiGioHang.updateGioHang(existingItem.maGioHang, updatedGioHang);
-        
+
         // Reload giỏ hàng
         await _loadGioHangList();
       }
@@ -403,16 +671,18 @@ Lưu ý:
       print('Lỗi khi cập nhật giỏ hàng: $e');
     }
   }
-  
+
   // Xóa món khỏi giỏ hàng
   Future<void> _removeFromCart(int maMonAn) async {
     try {
       final existingItem = _gioHangList?.firstWhere(
         (item) => item.maMonAn == maMonAn,
       );
-      
+
       if (existingItem != null && existingItem.maGioHang > 0) {
-        final response = await _apiGioHang.deleteGioHang(existingItem.maGioHang);
+        final response = await _apiGioHang.deleteGioHang(
+          existingItem.maGioHang,
+        );
         if (response.statusCode == 200 || response.statusCode == 204) {
           // Reload giỏ hàng
           await _loadGioHangList();
@@ -494,29 +764,6 @@ Lưu ý:
       appBar: AppBar(
         title: const Text('Chat với AI Trợ lý'),
         backgroundColor: AppColor.orange,
-        actions: [
-          // Hiển thị trạng thái kết nối dữ liệu
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: _isDataLoaded ? Colors.green : Colors.red,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  _isDataLoaded ? 'Đã tải dữ liệu' : 'Đang tải...',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
       ),
       body: Column(
         children: [
@@ -544,24 +791,28 @@ Lưu ý:
 
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: message.isUser
-                      ? BubbleSpecialThree(
-                          text: message.message,
-                          color: AppColor.orange,
-                          tail: true,
-                          textStyle: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
+                  child:
+                      message.isUser
+                          ? BubbleSpecialThree(
+                            text: message.message,
+                            color: AppColor.orange,
+                            tail: true,
+                            textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                            ),
+                            isSender: true,
+                          )
+                          : BubbleSpecialThree(
+                            text: message.message,
+                            color: const Color(0xFFE8E8EE),
+                            tail: true,
+                            textStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                            ),
+                            isSender: false,
                           ),
-                          isSender: true,
-                        )
-                      : BubbleSpecialThree(
-                          text: message.message,
-                          color: const Color(0xFFE8E8EE),
-                          tail: true,
-                          textStyle: TextStyle(color: Colors.black, fontSize: 16),
-                          isSender: false,
-                        ),
                 );
               },
             ),
@@ -648,8 +899,5 @@ class PendingOrder {
   final int maMonAn;
   final String tenMonAn;
 
-  PendingOrder({
-    required this.maMonAn,
-    required this.tenMonAn,
-  });
+  PendingOrder({required this.maMonAn, required this.tenMonAn});
 }
